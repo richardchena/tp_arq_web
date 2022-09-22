@@ -33,16 +33,27 @@
     <body>
         <nav class="navbar navbar-dark bg-info">
             <span class="navbar-brand mb-3 h1">Electiva 3</span>
-            <a href='cliente.jsp' class="text-white justify-content-center"  >Cliente</a>
-            <a href='index.html' class="text-white justify-content-center"  >Reportes</a>
-            <a href='index.html' class="text-white justify-content-center"  >Bolsa de puntos</a>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="cliente.jsp">Clientes</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="cliente.jsp">Reportes</a>
+            </li>
+            <a href='cliente.jsp' class="text-white "  >Cliente</a>
+            <a href='index.html' class="text-white "  >Reportes</a>
+            <a href='index.html' class="text-white "  >Bolsa de puntos</a>
+            
             <button onclick="location.href='./'" class="btn btn-outline-dark text-white"  type="button">INICIO</button>
         </nav>
+        
+        
         <h1>Clientes</h1>
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="py-4 px-4 bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <table class="table table-bordered">
+                    
                     <button onclick="location.href='createuser.jsp'" class="btn btn-success text-white" type="button">Agregar cliente</button>
+                    <br>
                     <br>
                     <thead>
                         <tr>
@@ -86,5 +97,6 @@
                 </table>
              </div>
         </div>
+        
     </body>
 </html>

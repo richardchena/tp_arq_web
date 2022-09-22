@@ -38,42 +38,43 @@
             <button onclick="location.href='./'" class="btn btn-outline-dark text-white"  type="button">INICIO</button>
         </nav>
         <h1>Agregar Cliente</h1>
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="py-4 px-4 bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <form action= "{{ url('add-user') }}" method="POST">
-                    
-
-                    <div>
-                        <label for="name" >Nombre</label>
-                        <input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')"  required autofocus />
-                    </div>
-                    <div>
-                        <label for="cedula" >Cedula</label>
-                        <input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')"  required autofocus />
-                    </div>
-                    <div>
-                        <label for="mail" >Correo</label>
-                        <input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')"  required autofocus />
-                    </div>
-                    <div>
-                        <label for="nacionalidad" >Nacionalidad</label>
-                        <input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')"  required autofocus />
-                    </div>
-                    <div>
-                        <label for="phone" >Telefono</label>
-                        <input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')"  required autofocus />
-                    </div>
-                    
-                     <div>
-                        <button onclick="location.href='cliente.jsp'" class="btn btn-primary text-white" type="button">Volver</button>
-                        <button onclick="location.href='createuser.jsp'" class="btn btn-success text-white" type="button">Guardar cliente</button>
-
-                     </div>
-
-
-
-                </form>
-            </div>
-        </div>
+        
+        <form class="row g-1">
+  <div class="col-md-6">
+    <label for="inputEmail4" class="form-label">Nombre</label>
+    <input type="email" class="form-control" id="inputEmail4">
+  </div>
+  <div class="col-md-6">
+    <label for="inputPassword4" class="form-label">Apellido</label>
+    <input type="password" class="form-control" id="inputPassword4">
+  </div>
+  <div class="col-12">
+    <label for="inputAddress" class="form-label">Nacionalidad</label>
+    <input type="text" class="form-control" id="inputAddress" >
+  </div>
+  <div class="col-12">
+    <label for="inputAddress2" class="form-label">Correo</label>
+    <input type="text" class="form-control" id="inputAddress2" >
+  </div>
+  <div class="col-md-6">
+    <label for="inputCity" class="form-label">Telefono</label>
+    <input type="text" class="form-control" id="inputCity">
+  </div>
+  <div class="col-md-4">
+    <label for="inputState" class="form-label">Fecha de nacimiento</label>
+    <select id="inputState" class="form-select">
+      <option selected>Choose...</option>
+      <option>...</option>
+    </select>
+  </div>
+  
+  
+  <div class="col-12">
+       <a href="cliente.jsp" class="btn btn-primary">Volver</a>
+           
+    <button type="submit" class="btn btn-success">Confirmar</button>
+  </div>
+</form>
+        
     </body>
 </html>
