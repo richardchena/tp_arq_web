@@ -1,6 +1,6 @@
 <%-- 
-    Document   : parametro
-    Created on : 20 sept. 2022, 20:03:42
+    Document   : consulta
+    Created on : 22 sept. 2022, 18:53:37
     Author     : Richard Cabrera
 --%>
 
@@ -9,32 +9,14 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Parametros</title>
-        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+        <title>Consulta puntos</title>
         <link rel="stylesheet" type="text/css" href="/tp_arq_web/styles/style.css">
+        <link rel="stylesheet" type="text/css" href="/tp_arq_web/styles/style_cabecera.css">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-        <style>
-            @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-
-            *{
-                margin: 0;
-                padding: 1px;
-                box-sizing: border-box;
-                font-family: 'Poppins', sans-serif;
-            }
-            
-            .tp-color{
-                background-color: #FFB700;
-            }
-            
-            .alejar{
-                margin-left: 10px
-            }
-            
-        </style>
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     </head>
     <body>
         <nav class="navbar navbar-expand-lg navbar-dark tp-color">
@@ -50,13 +32,13 @@
           <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav">
               <li class="nav-item">
-                <a class="nav-link text-white" href="/tp_arq_web/view/cliente/cliente.jsp">Clientes</a>
+                <a class="nav-link text-white" href="#">Clientes</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link text-white" href="/tp_arq_web/view/concepto/listar.jsp">Conceptos</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link text-muted" href="/tp_arq_web/view/parametros/parametro.jsp">Parámetros</a>
+                <a class="nav-link text-white" href="/tp_arq_web/view/parametros/parametro.jsp">Parámetros</a>
               </li>
               <li class="nav-item dropdown">
                 <a class="nav-link text-white dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -74,69 +56,42 @@
                   Servicios
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                  <a class="dropdown-item" href="/tp_arq_web/view/servicios/carga.jsp">Cargar puntos</a>
-                  <a class="dropdown-item" href="/tp_arq_web/view/servicios/utilizarpuntos.jsp">Utilizar puntos</a>
-                  <a class="dropdown-item" href="/tp_arq_web/view/servicios/consulta.jsp">Consulta de puntos</a>
+                  <a class="dropdown-item" href="#">Cargar puntos</a>
+                  <a class="dropdown-item" href="#">Utilizar puntos</a>
+                  <a class="dropdown-item" href="#">Consulta de puntos</a>
                 </div>
               </li>
               <li class="nav-item">
                 <a class="nav-link text-white" href="/tp_arq_web/view/reglas/listar.jsp">Reglas</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link text-white" href="/tp_arq_web/view/actualizacion/actualizacion.jsp">Actualización</a>
+                <a class="nav-link text-muted" href="/tp_arq_web/view/actualizacion/actualizacion.jsp">Actualización</a>
               </li>
             </ul>
           </div>
         </nav>
+        <h3>Consulta de puntos</h3>
         
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="py-4 px-4 bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <table class="table table-bordered text-center">
-                    <br>
-                    <thead>
-                        <tr>
-                            <th>Id. Operación</th>
-                            <th>Nombre Cliente</th>
-                            <th>Puntos</th> 
-                            <th>Valido hasta</th>
-                            <th>Controles</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        
-                        <tr>
-                            <td>145621</td>
-                            <td>Richard Cabrera</td>
-                            <td>25</td>
-                            <td>10/10/2021</td>
-                            <td>
-                                <a class="btn btn-primary" href="/tp_arq_web/view/parametros/modificar.jsp">
-                                    Modificar
-                                </a>
-                                
-                                <button  class="btn btn-danger">Eliminar</button>
-                            </td>
-                        </tr>
-                                               
-                    </tbody>
-                </table>
-             </div>
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 text-center">
+            <form>
+                <div class="campo">
+                    Introduzca una cantidad para obtener los puntos: <input type="number" id="consulta_puntos" value="">
+                </div>
+                <div class="campo">
+                    <input class="btn btn-success text-white" value="Consultar" type="button" />
+                </div>
+
+            </form>
         </div>
-        
         <script>
             $(document).ready(function(){
-                $(".btn-danger").click(function(){
-                    swal(
-                        "¿Desea eliminar lo seleccionado?", 
-                        {
-                            dangerMode: true,
-                            buttons: true
-                        }
-                    ).then(okay => { 
-                        if (okay) {
-                            window.location.reload();
-                        }
-                    });
+                $(".btn-success").click(function(){
+                    const valor = document.getElementById("consulta_puntos").value;
+                    
+                    if (valor !== '')
+                        swal("¡El monto " + valor + " equivale a 10 puntos!");
+                    else
+                        swal("¡Debe ingresar una monto!");
                 });
             });
         </script>
