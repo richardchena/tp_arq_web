@@ -1,0 +1,84 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Sep 20, 2022, 8:24:00 PM
+    Author     : HP
+*/
+
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+*{
+    margin: 0;
+    padding: 5px;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+.row{
+    border: 1px solid;
+    border-radius: 10px;
+    margin-top: 10px;
+}
+
+h3{
+    color: #FFB700;
+    font-family: 'Poppins', sans-serif;
+    padding-top: 25px;
+    text-align: center;
+}
+
+.campo{
+    padding-bottom: 15px;
+    text-align: center;
+}
+
+label {
+    display: inline-block;
+    text-align: left;
+    width: 12em;
+    vertical-align: bottom;
+}
+input {
+    display: inline-block;
+    width: 12em;
+}
+
+
+input[type=radio]{
+    text-align: left;
+    width: 1em;
+    margin-left: 36.6%;
+    margin-bottom: 15px;
+}
+
+.btn-primary:hover{
+    background-color: rgb(242,173,0) !important;
+
+}
+
+.btn-primary{
+    background-color: #FFB700 !important;
+    border-color: #FFB700 !important;
+
+}
+
+.btn-primary:focus{
+    box-shadow: 0 0 0 4px rgb(255,219,129)!important;
+}
+
+.btn-success{
+    background-color: #FF6700 !important;
+    border-color: #FF6700 !important;
+}
+
+.btn-success:hover{
+    background-color: #EF6C00 !important;
+}
+
+.btn-success:focus{
+    box-shadow: 0 0 0 4px rgb(255,208,165)!important;
+}
