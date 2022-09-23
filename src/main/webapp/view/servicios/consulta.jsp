@@ -32,7 +32,7 @@
           <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav">
               <li class="nav-item">
-                <a class="nav-link text-white" href="#">Clientes</a>
+                <a class="nav-link text-white" href="/tp_arq_web/view/cliente/cliente.jsp">Clientes</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link text-white" href="/tp_arq_web/view/concepto/listar.jsp">Conceptos</a>
@@ -52,20 +52,20 @@
                 </div>
               </li>
               <li class="nav-item dropdown">
-                <a class="nav-link text-white dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <a class="nav-link text-mute dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   Servicios
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                  <a class="dropdown-item" href="#">Cargar puntos</a>
-                  <a class="dropdown-item" href="#">Utilizar puntos</a>
-                  <a class="dropdown-item" href="#">Consulta de puntos</a>
+                  <a class="dropdown-item" href="/tp_arq_web/view/servicios/carga.jsp">Cargar puntos</a>
+                  <a class="dropdown-item" href="/tp_arq_web/view/servicios/utilizarpuntos.jsp">Utilizar puntos</a>
+                  <a class="dropdown-item" href="/tp_arq_web/view/servicios/consulta.jsp">Consulta de puntos</a>
                 </div>
               </li>
               <li class="nav-item">
                 <a class="nav-link text-white" href="/tp_arq_web/view/reglas/listar.jsp">Reglas</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link text-muted" href="/tp_arq_web/view/actualizacion/actualizacion.jsp">Actualización</a>
+                <a class="nav-link text-white" href="/tp_arq_web/view/actualizacion/actualizacion.jsp">Actualización</a>
               </li>
             </ul>
           </div>

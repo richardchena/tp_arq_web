@@ -9,72 +9,101 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" type="text/css" href="/tp_arq_web/styles/style.css">
+        <link rel="stylesheet" type="text/css" href="/tp_arq_web/styles/style_cabecera.css">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-        <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
-        *{
-            margin: 0;
-            padding: 5px;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-        }
-
-        .row{
-            border: 1px solid;
-            border-radius: 10px;
-            margin-top: 10px;
-        }
-
-        
-    </style>
     </head>
     <body>
-        <nav class="navbar navbar-dark bg-info">
-            <span class="navbar-brand mb-3 h1">Electiva 3</span>
-            <a href='cliente.jsp' class="text-white justify-content-center"  >Cliente</a>
-            <a href='index.html' class="text-white justify-content-center"  >Reportes</a>
-            <a href='index.html' class="text-white justify-content-center"  >Bolsa de puntos</a>
-            <button onclick="location.href='./'" class="btn btn-outline-dark text-white"  type="button">INICIO</button>
+        <nav class="navbar navbar-expand-lg navbar-dark tp-color">
+          <a class="navbar-brand" href="/tp_arq_web">
+            <img src="/tp_arq_web/img/logo.png" width="30" height="30" class="d-inline-block tp-color alejar" alt="">
+          </a>
+          <a href="/tp_arq_web"
+              <span class="navbar-brand mb-0 h1 text-black">SFC</span>
+          </a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a class="nav-link text-muted" href="/tp_arq_web/view/cliente/cliente.jsp">Clientes</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-white" href="/tp_arq_web/view/concepto/listar.jsp">Conceptos</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-white" href="/tp_arq_web/view/parametros/parametro.jsp">Parámetros</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link text-white dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Reportes
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                  <a class="dropdown-item" href="#">Uso de puntos</a>
+                  <a class="dropdown-item" href="#">Bolsa de puntos</a>
+                  <a class="dropdown-item" href="#">Clientes con puntos a vencer</a>
+                  <a class="dropdown-item" href="#">Clientes</a>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link text-white dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Servicios
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                  <a class="dropdown-item" href="/tp_arq_web/view/servicios/carga.jsp">Cargar puntos</a>
+                  <a class="dropdown-item" href="/tp_arq_web/view/servicios/utilizarpuntos.jsp">Utilizar puntos</a>
+                  <a class="dropdown-item" href="/tp_arq_web/view/servicios/consulta.jsp">Consulta de puntos</a>
+                </div>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-white" href="/tp_arq_web/view/reglas/listar.jsp">Reglas</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-white" href="/tp_arq_web/view/actualizacion/actualizacion.jsp">Actualización</a>
+              </li>
+            </ul>
+          </div>
         </nav>
-        <h1>Agregar Cliente</h1>
-        
-        <form class="row g-1">
-  <div class="col-md-6">
-    <label for="inputEmail4" class="form-label">Nombre</label>
-    <input type="email" class="form-control" id="inputEmail4">
-  </div>
-  <div class="col-md-6">
-    <label for="inputPassword4" class="form-label">Apellido</label>
-    <input type="password" class="form-control" id="inputPassword4">
-  </div>
-  <div class="col-12">
-    <label for="inputAddress" class="form-label">Nacionalidad</label>
-    <input type="text" class="form-control" id="inputAddress" >
-  </div>
-  <div class="col-12">
-    <label for="inputAddress2" class="form-label">Correo</label>
-    <input type="text" class="form-control" id="inputAddress2" >
-  </div>
-  <div class="col-md-6">
-    <label for="inputCity" class="form-label">Telefono</label>
-    <input type="text" class="form-control" id="inputCity">
-  </div>
-  <div class="col-md-4">
-    <label for="inputState" class="form-label">Fecha de nacimiento</label>
-    <select id="inputState" class="form-select">
-      <option selected>Choose...</option>
-      <option>...</option>
-    </select>
-  </div>
-  
-  
-  <div class="col-12">
-       <a href="cliente.jsp" class="btn btn-primary">Volver</a>
-           
-    <button type="submit" class="btn btn-success">Confirmar</button>
-  </div>
-</form>
-        
+        <h3>Agregar Cliente</h3>
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="py-4 px-4 bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <form>
+                    <div class="campo">
+                      <label for="inputEmail4">Nombre</label>
+                      <input type="text" id="inputEmail4">
+                    </div>
+                    <div class="campo">
+                      <label for="inputPassword4">Apellido</label>
+                      <input type="text" id="inputPassword4">
+                    </div>
+                    <div class="campo">
+                      <label for="inputAddress">Nacionalidad</label>
+                      <input type="text" id="inputAddress" >
+                    </div>
+                    <div class="campo">
+                      <label for="inputAddress2">Correo</label>
+                      <input type="email" id="inputAddress2" >
+                    </div>
+                    <div class="campo">
+                      <label for="inputCity">Telefono</label>
+                      <input type="text" id="inputCity">
+                    </div>
+                    <div class="campo">
+                      <label for="inputState">Fecha de nacimiento</label>
+                      <input type="date" name="fec_nacimiento" id="fec" required>
+                    </div>
+                    <br>
+                    <div class="campo">
+                       <button onclick="location.href='./cliente.jsp'" class="btn btn-primary text-white" type="button">Volver</button>
+                       <button onclick="location.href='#'" class="btn btn-success text-white" type="button">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </body>
 </html>

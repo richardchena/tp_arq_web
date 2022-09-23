@@ -30,7 +30,7 @@
           <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav">
               <li class="nav-item">
-                <a class="nav-link text-white" href="#">Clientes</a>
+                <a class="nav-link text-white" href="/tp_arq_web/view/cliente/cliente.jsp">Clientes</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link text-white" href="/tp_arq_web/view/concepto/listar.jsp">Conceptos</a>
@@ -54,9 +54,9 @@
                   Servicios
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                  <a class="dropdown-item" href="#">Cargar puntos</a>
-                  <a class="dropdown-item" href="#">Utilizar puntos</a>
-                  <a class="dropdown-item" href="#">Consulta de puntos</a>
+                  <a class="dropdown-item" href="/tp_arq_web/view/servicios/carga.jsp">Cargar puntos</a>
+                  <a class="dropdown-item" href="/tp_arq_web/view/servicios/utilizarpuntos.jsp">Utilizar puntos</a>
+                  <a class="dropdown-item" href="/tp_arq_web/view/servicios/consulta.jsp">Consulta de puntos</a>
                 </div>
               </li>
               <li class="nav-item">
@@ -83,17 +83,17 @@
                     <div class="campo">
                       
                         <label class="la" for="inferior" >Limite inferior</label>
-                        <input class="in" id="lim_inf"  type="text" name="lim_inf" disabled="true"/>
+                        <input class="in" id="lim_inf"  type="number" name="lim_inf" disabled="true"/>
                     </div>
                     <div class="campo">
                         <label class="la" for="superior" >Limite superior</label>
-                        <input class="in" id="lim_sup"  type="text" name="lim_sup" disabled="true"/>
+                        <input class="in" id="lim_sup"  type="number" name="lim_sup" disabled="true"/>
                     </div>
                     <div class="campo">
                         <label class="la" for="monto" >1 punto cada</label>
-                        <input class="in" id="monto" class="block mt-1 w-full" type="text" name="monto" :value="old('name')"  required autofocus />
+                        <input class="in" id="monto" class="block mt-1 w-full" type="number" name="monto" :value="old('name')"  required autofocus />
                     </div>
-                   <br>
+                    <br>
                     <div class="campo">
                        <button onclick="location.href='./listar.jsp'" class="btn btn-primary text-white" type="button">Volver</button>
                        <button onclick="location.href='#'" class="btn btn-success text-white" type="button">Guardar</button>

@@ -1,7 +1,7 @@
 <%-- 
-    Document   : carga
-    Created on : 22 sept. 2022, 16:47:55
-    Author     : Admin
+    Document   : modificar
+    Created on : Sep 21, 2022, 10:52:39 PM
+    Author     : HP
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -15,7 +15,6 @@
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-        <title>JSP Page</title>
     </head>
     <body>
         <nav class="navbar navbar-expand-lg navbar-dark tp-color">
@@ -34,7 +33,7 @@
                 <a class="nav-link text-white" href="/tp_arq_web/view/cliente/cliente.jsp">Clientes</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link text-white" href="/tp_arq_web/view/concepto/listar.jsp">Conceptos</a>
+                <a class="nav-link text-muted" href="/tp_arq_web/view/concepto/listar.jsp">Conceptos</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link text-white" href="/tp_arq_web/view/parametros/parametro.jsp">Parámetros</a>
@@ -51,7 +50,7 @@
                 </div>
               </li>
               <li class="nav-item dropdown">
-                <a class="nav-link text-muted dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <a class="nav-link text-white dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   Servicios
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
@@ -69,26 +68,26 @@
             </ul>
           </div>
         </nav>
-        <h3>Cargar Puntos</h3>
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <h3>Modificar Concepto</h3>
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 text-center">
             <div class="py-4 px-4 bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <form>
                     <div class="campo">
-                      <label for="inputEmail4">Cedula del cliente</label>
-                      <input type="email" id="inputEmail4">
+                        <label for="name" >Descripcion</label>
+                        <input id="name" class="block mt-1 w-full" type="text" name="name" value="Vale de compra"/>
                     </div>
-
                     <div class="campo">
-                      <label for="inputPassword4">Monto de la operacion</label>
-                      <input type="password" id="inputPassword4">
+                        <label for="cedula" >Puntos requeridos</label>
+                        <input id="name" class="block mt-1 w-full" type="text" name="name" value="50"/>
                     </div>
                     <br>
-                    <div class="campo">
-                       <button onclick="location.href='#'" class="btn btn-success text-white" type="button">Cargar puntos</button>
-                    </div>
-                </form>   
+                     <div>
+                        <button onclick="location.href='./listar.jsp'" class="btn btn-primary text-white" type="button">Volver</button>
+                        <button class="btn btn-success text-white" type="button">Guardar</button>
+
+                     </div>
+                </form>
             </div>
         </div>
-     
     </body>
 </html>

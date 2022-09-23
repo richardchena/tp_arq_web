@@ -1,7 +1,7 @@
 <%-- 
-    Document   : carga
-    Created on : 22 sept. 2022, 16:47:55
-    Author     : Admin
+    Document   : modificar
+    Created on : Sep 22, 2022, 8:04:50 PM
+    Author     : HP
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -15,7 +15,7 @@
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-        <title>JSP Page</title>
+
     </head>
     <body>
         <nav class="navbar navbar-expand-lg navbar-dark tp-color">
@@ -31,7 +31,7 @@
           <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav">
               <li class="nav-item">
-                <a class="nav-link text-white" href="/tp_arq_web/view/cliente/cliente.jsp">Clientes</a>
+                <a class="nav-link text-muted" href="/tp_arq_web/view/cliente/cliente.jsp">Clientes</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link text-white" href="/tp_arq_web/view/concepto/listar.jsp">Conceptos</a>
@@ -51,7 +51,7 @@
                 </div>
               </li>
               <li class="nav-item dropdown">
-                <a class="nav-link text-muted dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <a class="nav-link text-white dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   Servicios
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
@@ -69,26 +69,41 @@
             </ul>
           </div>
         </nav>
-        <h3>Cargar Puntos</h3>
+        <h3>Agregar Cliente</h3>
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="py-4 px-4 bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <form>
                     <div class="campo">
-                      <label for="inputEmail4">Cedula del cliente</label>
-                      <input type="email" id="inputEmail4">
+                      <label for="inputEmail4">Nombre</label>
+                      <input type="text" id="inputEmail4" value="Maiki">
                     </div>
-
                     <div class="campo">
-                      <label for="inputPassword4">Monto de la operacion</label>
-                      <input type="password" id="inputPassword4">
+                      <label for="inputPassword4">Apellido</label>
+                      <input type="text" id="inputPassword4" value="Martinez">
+                    </div>
+                    <div class="campo">
+                      <label for="inputAddress">Nacionalidad</label>
+                      <input type="text" id="inputAddress" value="Paraguayo">
+                    </div>
+                    <div class="campo">
+                      <label for="inputAddress2">Correo</label>
+                      <input type="email" id="inputAddress2" value="maiki@gmail.com" >
+                    </div>
+                    <div class="campo">
+                      <label for="inputCity">Telefono</label>
+                      <input type="text" id="inputCity" value="0983925798">
+                    </div>
+                    <div class="campo">
+                      <label for="inputState">Fecha de nacimiento</label>
+                      <input type="date" name="fec_nacimiento" id="fec" value="1997-10-15" required>
                     </div>
                     <br>
                     <div class="campo">
-                       <button onclick="location.href='#'" class="btn btn-success text-white" type="button">Cargar puntos</button>
+                       <button onclick="location.href='./cliente.jsp'" class="btn btn-primary text-white" type="button">Volver</button>
+                       <button onclick="location.href='#'" class="btn btn-success text-white" type="button">Guardar</button>
                     </div>
-                </form>   
+                </form>
             </div>
         </div>
-     
     </body>
 </html>

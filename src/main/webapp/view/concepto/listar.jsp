@@ -32,7 +32,7 @@
           <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav">
               <li class="nav-item">
-                <a class="nav-link text-white" href="#">Clientes</a>
+                <a class="nav-link text-white" href="/tp_arq_web/view/cliente/cliente.jsp">Clientes</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link text-muted" href="/tp_arq_web/view/concepto/listar.jsp">Conceptos</a>
@@ -56,9 +56,9 @@
                   Servicios
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                  <a class="dropdown-item" href="#">Cargar puntos</a>
-                  <a class="dropdown-item" href="#">Utilizar puntos</a>
-                  <a class="dropdown-item" href="#">Consulta de puntos</a>
+                  <a class="dropdown-item" href="/tp_arq_web/view/servicios/carga.jsp">Cargar puntos</a>
+                  <a class="dropdown-item" href="/tp_arq_web/view/servicios/utilizarpuntos.jsp">Utilizar puntos</a>
+                  <a class="dropdown-item" href="/tp_arq_web/view/servicios/consulta.jsp">Consulta de puntos</a>
                 </div>
               </li>
               <li class="nav-item">
@@ -88,7 +88,9 @@
                             <td>Vale de compra</td>
                             <td>50</td>                            
                             <td>
-                                <button class="btn btn-primary" type="button">Modificar</button>
+                                <a class="btn btn-primary" href="/tp_arq_web/view/concepto/modificar.jsp">
+                                    Modificar
+                                </a>
                                 <button  class="btn btn-danger" type="button">Eliminar</button>
                             </td>
                         </tr>     
