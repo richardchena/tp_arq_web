@@ -8,6 +8,7 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <title>Reglas - Agregar</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="stylesheet" type="text/css" href="/tp_arq_web/styles/style.css">
         <link rel="stylesheet" type="text/css" href="/tp_arq_web/styles/style_cabecera.css">
