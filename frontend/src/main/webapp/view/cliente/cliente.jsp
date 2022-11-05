@@ -16,9 +16,10 @@
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
         <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
         <title>Clientes</title>
     </head>
-    <body>
+    <body onload="fetch();">
         <nav class="navbar navbar-expand-lg navbar-dark tp-color">
           <a class="navbar-brand" href="/tp_arq_web">
             <img src="/tp_arq_web/img/logo.png" width="30" height="30" class="d-inline-block tp-color alejar" alt="">
@@ -89,29 +90,7 @@
                             <th>Controles</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        
-                        <tr>
-                            <td>1</td>
-                            <td>Maiki</td>
-                            <td>123456</td>
-                            <td>maiki@gmail.com</td>
-                            <td>Paraguayo</td>
-                            <td>0983925798 </td>
-                            
-                            <td>
-                                <a class="btn btn-primary" href="/tp_arq_web/view/cliente/modificar.jsp">
-                                    Modificar
-                                </a>
-                                <button  class="btn btn-danger" type="button">Eliminar</button>
-                            </td>
-                        </tr>
-                        
-                        <tr>
-                            <td colspan="6"></td>
-                        </tr>
-                       
-                    </tbody>
+                    <tbody id="content"></tbody>
                 </table>
              </div>
         </div>
@@ -131,6 +110,30 @@
                     });
                 });
             });
+            
+            function fetch() {
+                $.ajax({
+                    url:"http://localhost:9090/api/v1/cliente",
+                    dataType:"json",
+                    success:function(res){
+                       var data="";
+                       for(i=0;i<res.length;i++){
+                           let p = res[i];
+                           data+="<tr id="+ p.id + "><td>"+p.id+"</td><td>"+p.nombre+"</td><td>"+p.doc_nro+"</td><td>"+p.email+"</td><td>"+p.nacionalidad+"</td><td>"+p.telefono+"</td>";
+                           data+='<td><button  class="btn btn-danger" onclick="hola" type="button">Eliminar</button></td></tr>';
+                       }
+                       $('#status').html("Status : Content fetched");
+                       $('#content').html(data);
+                    },
+                    error:function() {
+                        $alert("error occured");
+                    }
+                });
+            }
+            
+            function hola(){
+                alert("sfskflm");
+            }
         </script>
     </body>
 </html>
