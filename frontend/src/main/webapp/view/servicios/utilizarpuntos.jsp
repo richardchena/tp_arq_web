@@ -16,7 +16,7 @@
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>        <title>JSP Page</title>
-        
+        <script src="https://code.jquery.com/jquery-3.4.1.js"></script> 
     </head>
     <body>
         <nav class="navbar navbar-expand-lg navbar-dark tp-color">
@@ -75,8 +75,8 @@
             <div class="py-4 px-4 bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <form>
                     <div class="campo">
-                      <label for="inputEmail4">Cedula del cliente</label>
-                      <input type="email" id="inputEmail4">
+                      <label for="cedula">Cedula del cliente</label>
+                      <input type="number" id="cedula" value=10010>
                     </div>
                     <div class="campo">
                       <label for="inputState">Concepto</label>
@@ -89,10 +89,89 @@
                     </div>
                     <br>
                     <div class="campo">
-                       <button onclick="location.href='#'" class="btn btn-success text-white" type="button">Utilizar puntos</button>
+                       <button onclick="encontrar_id();" class="btn btn-success text-white" type="button">Utilizar puntos</button>
                     </div>
                 </form> 
             </div>
         </div>
+            <script>
+            $(document).ready(function(){
+                $(".btn-danger").click(function(){
+                    swal(
+                        "¿Desea eliminar lo seleccionado?", 
+                        {
+                            dangerMode: true,
+                            buttons: true
+                        }
+                    ).then(okay => { 
+                        if (okay) {
+                            window.location.reload();
+                        }
+                    });
+                });
+            });
+            
+            function encontrar_id() {
+                $.ajax({
+                    url:"http://localhost:9090/api/v1/bolsa?id="+1,
+                    dataType:"json",
+                    success:function(res){
+                        var j=0;
+                        var caducidad = res[0].caducidad_puntaje;
+                        
+                        for(i=0;i<res.length;i++){
+                            let p = res[i];
+                            if(p.caducidad_puntaje > caducidad){
+                                caducidad=p.caducidad_puntaje;
+                                j=i;
+                            }
+                            alert(id);
+                        }
+                        
+                        var id = res[j].id;
+                        var id_cliente= res[j].id_cliente;
+                        var asignacion_puntaje= res[j].asignacion_puntaje;
+                        var caducidad_puntaje= res[j].caducidad_puntaje;
+                        var puntaje_asignado= res[j].puntaje_asignado;
+                        var puntaje_utilizado= res[j].puntaje_utilizado;
+                        var saldo_puntos= res[j].saldo_puntos;
+                        var monto_operacion= res[j].monto_operacion;
+                        var bolsa = {
+                            "id":id,
+                            "id_cliente": id_cliente,
+                            "asignacion_puntaje": asignacion_puntaje,
+                            "caducidad_puntaje": caducidad_puntaje,
+                            "puntaje_asignado": puntaje_asignado,
+                            "puntaje_utilizado": 1,
+                            "saldo_puntos": saldo_puntos-1,
+                            "monto_operacion": monto_operacion
+                        };
+                        $.ajax({
+                            data: bolsa,
+                            type: "POST",
+                            url:"http://localhost:9090/api/v1/bolsa",
+                            dataType:"json",
+                            success:function(data){
+                                   alert("holis");
+                            },
+                            error:function() {
+                                $alert("error occured");
+                            }
+                        });
+
+                       
+                       
+                    },
+                    error:function() {
+                        $alert("error occured");
+                    }
+                });
+            }
+
+            
+            function hola(){
+                alert("sfskflm");
+            }
+        </script>
     </body>
 </html>
