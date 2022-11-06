@@ -15,9 +15,11 @@
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
         <title>Cliente - Modificar</title>
     </head>
-    <body>
+    <body onload="validar_url();">
         <nav class="navbar navbar-expand-lg navbar-dark tp-color">
           <a class="navbar-brand" href="/tp_arq_web">
             <img src="/tp_arq_web/img/logo.png" width="30" height="30" class="d-inline-block tp-color alejar" alt="">
@@ -69,41 +71,165 @@
             </ul>
           </div>
         </nav>
-        <h3>Agregar Cliente</h3>
+        <h3>Modificar Cliente</h3>
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="py-4 px-4 bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <form>
                     <div class="campo">
                       <label for="inputEmail4">Nombre</label>
-                      <input type="text" id="inputEmail4" value="Maiki">
+                      <input type="text" id="nombre" required>
                     </div>
                     <div class="campo">
                       <label for="inputPassword4">Apellido</label>
-                      <input type="text" id="inputPassword4" value="Martinez">
+                      <input type="text" id="apellido" required>
+                    </div>
+                    <div class="campo">
+                      <label for="inputPassword4">Nro. Documento</label>
+                      <input type="number" id="doc" required>
+                    </div>
+                    <div class="campo">
+                      <label for="inputPassword4">Tipo documento</label>
+                      <!--<input type="text" id="tipo">-->
+                      <select name="select" id="tipo">
+                            <option value="C.I." selected>C.I.</option>
+                            <option value="Pasaporte">Pasaporte</option>
+                      </select>
                     </div>
                     <div class="campo">
                       <label for="inputAddress">Nacionalidad</label>
-                      <input type="text" id="inputAddress" value="Paraguayo">
+                      <input type="text" id="nac" required>
                     </div>
                     <div class="campo">
                       <label for="inputAddress2">Correo</label>
-                      <input type="email" id="inputAddress2" value="maiki@gmail.com" >
+                      <input type="email" id="email" required>
                     </div>
                     <div class="campo">
                       <label for="inputCity">Telefono</label>
-                      <input type="text" id="inputCity" value="0983925798">
+                      <input type="text" id="tel" required>
                     </div>
                     <div class="campo">
                       <label for="inputState">Fecha de nacimiento</label>
-                      <input type="date" name="fec_nacimiento" id="fec" value="1997-10-15" required>
+                      <input type="date" name="fec_nacimiento" id="fec" required>
                     </div>
                     <br>
                     <div class="campo">
                        <button onclick="location.href='./cliente.jsp'" class="btn btn-primary text-white" type="button">Volver</button>
-                       <button onclick="location.href='#'" class="btn btn-success text-white" type="button">Guardar</button>
+                       <button onclick="validar_campos()" class="btn btn-success text-white" type="button">Modificar</button>
                     </div>
                 </form>
             </div>
         </div>
+        
+        <script>
+            function validar_url(){
+                const queryString = window.location.search;
+                const urlParams = new URLSearchParams(queryString);
+                
+                if (urlParams.has('id') && !isNaN(urlParams.get('id'))){
+                    obtener(urlParams.get('id'));
+                } else {
+                    window.location.href='./cliente.jsp';
+                }
+            }
+            
+            function validar_campos(){
+                let j = obtener_datos();
+                
+                if(j.nombre === '' || 
+                   j.apellido === '' || 
+                   j.doc_nro === '' || 
+                   j.tipo_doc === '' ||
+                   j.nacionalidad === '' || 
+                   j.email === '' || 
+                   j.telefono === '' ||
+                   j.fec_nac === '') {
+                    swal("Debe completar todos los campos");
+                } else {
+                    modificar_user();
+                }
+            }
+            
+            function modificar_user(){
+                let json = obtener_datos();
+                
+                $.ajax({
+                    type: 'put',
+                    url:"http://localhost:9090/api/v1/cliente/",
+                    dataType:"json",
+                    data: json,
+                    success: function(data){
+                        //EL BACKEND RETORNA UN MENSAJE Y ESO OBTENGO
+                        swal(data.message.toUpperCase(), 
+                        ).then(okay => { 
+                            if (okay) {
+                                window.location.href='./cliente.jsp';
+                            }
+                        });
+                    },
+                    
+                    error: function(data) {
+                        let mess = JSON.parse(data.responseText);
+                        //EL BACKEND RETORNA UN MENSAJE Y ESO OBTENGO
+                        swal(
+                            mess.message.toUpperCase(), 
+                            {
+                                dangerMode: true,
+                                buttons: true
+                            }
+                        ).then(okay => { 
+                            if (okay) {
+                                //window.location.reload();
+                            }
+                        });
+                    }
+                });
+            }
+
+            function obtener_datos(){
+                const queryString = window.location.search;
+                const urlParams = new URLSearchParams(queryString);
+                
+                let obj = {
+                    id: urlParams.get('id'),
+                    nombre: document.getElementById("nombre").value,
+                    apellido: document.getElementById("apellido").value,
+                    doc_nro: document.getElementById("doc").value,
+                    tipo_doc: document.getElementById("tipo").value,
+                    nacionalidad: document.getElementById("nac").value,
+                    email: document.getElementById("email").value,
+                    telefono: document.getElementById("tel").value,
+                    fec_nac: document.getElementById("fec").value
+                };
+                
+                return obj;
+            }
+            
+            function obtener(id){
+                $.ajax({
+                    type: 'GET',
+                    dataType:"json",
+                    url:"http://localhost:9090/api/v1/cliente/" + id,
+                    success:function(res){
+                        document.getElementById("nombre").value = res.nombre;
+                        document.getElementById("apellido").value = res.apellido;
+                        document.getElementById("doc").value = res.doc_nro;
+                        document.getElementById("tipo").value =  res.tipo_doc;
+                        document.getElementById("nac").value = res.nacionalidad;
+                        document.getElementById("email").value = res.email;
+                        document.getElementById("tel").value = res.telefono;
+                        fec = res.fec_nac.substr(0, 10);
+                        document.getElementById("fec").value = fec;
+                    },
+                    error:function(err) {
+                        swal(err.responseJSON.message)
+                            .then(okay => { 
+                                if (okay) {
+                                    window.location.href='./cliente.jsp';
+                                }
+                            });
+                    }
+                });
+            }
+        </script>
     </body>
 </html>

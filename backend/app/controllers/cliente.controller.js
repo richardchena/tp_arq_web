@@ -33,11 +33,15 @@ exports.findOne = (req, res) => {
     const id = req.params.id;
     Clientes.findByPk(id)
         .then(data => {
-            res.send(data);
+            if(data === null){
+                throw('No se encontro el ID');
+            } else{
+                res.send(data);
+            }
         })
         .catch(err => {
             res.status(500).send({
-                message: "Error al obtener venta con id: " + id
+                message: "Error al obtener el ID -> " + err
         });
     });
 };
@@ -46,7 +50,7 @@ exports.findOne = (req, res) => {
 exports.findAll = (req, res) => {
     const nombre = req.query.nombre;
     var condition = nombre ? { cliente: { [Op.iLike]: `%${nombre}%` } } : null;
-    Clientes.findAll({ where: condition })
+    Clientes.findAll({ where: condition, order: [['id']] })
         .then(data => {
             res.send(data);
         })
@@ -91,7 +95,7 @@ exports.update = (req, res) => {
 
     Clientes.update(cliente, {where: {id: cliente.id}})
         .then(data => {
-            res.send({message: "Se han modificado correctamente los campos"});
+            res.send({message: "Se ha modificado el usuario " + cliente.nombre + " " + cliente.apellido});
         })
         .catch(err => {
             res.status(500).send({

@@ -114,13 +114,28 @@
                     <br>
                     <div class="campo">
                        <button onclick="location.href='./cliente.jsp'" class="btn btn-primary text-white" type="button">Volver</button>
-                       <button onclick="crear_user()" class="btn btn-success text-white" type="button" disabled>Guardar</button>
+                       <button onclick="validar_campos()" class="btn btn-success text-white" type="button">Guardar</button>
                     </div>
                 </form>
             </div>
         </div>
         <script>
-            //document.getElementById('nombre').addEventListener('change', bloquear_boton);
+            function validar_campos(){
+                let j = obtener_datos();
+                
+                if(j.nombre === '' || 
+                   j.apellido === '' || 
+                   j.doc_nro === '' || 
+                   j.tipo_doc === '' ||
+                   j.nacionalidad === '' || 
+                   j.email === '' || 
+                   j.telefono === '' ||
+                   j.fec_nac === '') {
+                    swal("Debe completar todos los campos");
+                } else{
+                    crear_user();
+                }
+            }
             
             function crear_user(){
                 let json = obtener_datos();
@@ -157,11 +172,6 @@
                     }
                 });
             }
-            
-            function bloquear_boton(){
-                alert('hola');
-            }
-            
             
             function obtener_datos(){
                 let obj = {
