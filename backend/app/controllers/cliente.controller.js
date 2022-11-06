@@ -17,7 +17,9 @@ exports.create = (req, res) => {
 
     Clientes.create(cliente)
         .then(data => {
-            res.send(data);
+            res.status(200).send({
+                message: "Se ha creado el usuario " + cliente.nombre + " " + cliente.apellido
+            });
         })
         .catch(err => {
             res.status(500).send({

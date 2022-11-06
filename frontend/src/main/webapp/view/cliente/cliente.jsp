@@ -130,10 +130,6 @@
                     }
                 });
             }
-            
-            function hola(){
-                alert("sfskflm");
-            }
         </script>
     </body>
 </html>
