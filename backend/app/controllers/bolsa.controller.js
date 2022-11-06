@@ -11,7 +11,7 @@ exports.create = (req, res) => {
         puntaje_asignado: req.body.puntaje_asignado,
         puntaje_utilizado: req.body.puntaje_utilizado,
         saldo_puntos: req.body.saldo_puntos,
-        monto_operacion: req.body.saldo_puntos
+        monto_operacion: req.body.monto_operacion
     };
 
     // Guardamos a la base de datos
@@ -53,6 +53,19 @@ exports.findAll = (req, res) => {
     });
 };
 
+exports.findAll = (req, res) => {
+    const id = req.query.fin;
+    var condition = id ? { id_cliente: { [Op.eq]: `%${id}%` } } : null;
+    Bolsas.findAll({ where: condition })
+        .then(data => {
+            res.send(data);
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: err.message || "Ocurrio un error al obtener los parametros."
+        });
+    });
+};
 exports.destroy = (req, res) => {
     const id = req.params.id;
     Parametros.destroy({
@@ -70,14 +83,18 @@ exports.destroy = (req, res) => {
 
 //Modificar
 exports.update = (req, res) => {
-    const parametro = {
+    const bolsa = {
         id: req.body.id,
-        ini_validez: req.body.ini_validez,
-        fin_validez: req.body.fin_validez,
-        duracion: req.body.duracion,
+        id_cliente: req.body.id_cliente,
+        asignacion_puntaje: req.body.asignacion_puntaje,
+        caducidad_puntaje: req.body.caducidad_puntaje,
+        puntaje_asignado: req.body.puntaje_asignado,
+        puntaje_utilizado: req.body.puntaje_utilizado,
+        saldo_puntos: req.body.saldo_puntos,
+        monto_operacion: req.body.monto_operacion
     };
 
-    Parametros.update(parametro, {where: {id: parametro.id}})
+    Bolsas.update(bolsa, {where: {id: bolsa.id}})
         .then(data => {
             res.send({message: "Se han modificado correctamente los campos"});
         })
