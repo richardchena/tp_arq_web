@@ -10,7 +10,7 @@ module.exports = app => {
     router.get("/:id", cliente.findOne);
 
     //Modificar
-    router.put("/", cliente.update)
+    router.put("/", cliente.update);
 
     //Eliminar
     router.delete("/:id", cliente.destroy);
