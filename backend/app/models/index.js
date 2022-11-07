@@ -20,5 +20,6 @@ db.Clientes = require("./cliente.model.js")(sequelize, Sequelize);
 db.Parametros = require("./parametro.model.js")(sequelize, Sequelize);
 db.Bolsas = require("./bolsa.model.js")(sequelize, Sequelize);
 db.Conceptos = require("./concepto.model.js")(sequelize, Sequelize);
+db.Reglas = require("./regla.model.js")(sequelize, Sequelize);
 
 module.exports = db;

@@ -16,6 +16,8 @@
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     </head>
     <body>
         <nav class="navbar navbar-expand-lg navbar-dark tp-color">
@@ -73,7 +75,6 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="py-4 px-4 bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <form>
-                    
                     <div>
                         <input type="radio" id="reglaOp1"
                                name="contact" value="sinRango" checked="true"> Sin rango  <br>
@@ -84,11 +85,11 @@
                     <div class="campo">
                       
                         <label class="la" for="inferior" >Limite inferior</label>
-                        <input class="in" id="lim_inf"  type="number" name="lim_inf" disabled="true"/>
+                        <input class="in" id="limite_inferior"  type="number" name="lim_inf" disabled="true"/>
                     </div>
                     <div class="campo">
                         <label class="la" for="superior" >Limite superior</label>
-                        <input class="in" id="lim_sup"  type="number" name="lim_sup" disabled="true"/>
+                        <input class="in" id="limite_superior"  type="number" name="lim_sup" disabled="true"/>
                     </div>
                     <div class="campo">
                         <label class="la" for="monto" >1 punto cada</label>
@@ -97,27 +98,101 @@
                     <br>
                     <div class="campo">
                        <button onclick="location.href='./listar.jsp'" class="btn btn-primary text-white" type="button">Volver</button>
-                       <button onclick="location.href='#'" class="btn btn-success text-white" type="button">Guardar</button>
-
+                       <button onclick="validar_campos()" class="btn btn-success text-white" type="button">Guardar</button>
                     </div>
                 </form>
             </div>
         </div>
+        <script>
+            function obtener_datos(){
+                let selection = document.getElementById("reglaOp1").checked;
+                let obj = null;
+                
+                if(!selection){
+                    obj = {
+                        limite_inferior: document.getElementById("limite_inferior").value,
+                        limite_superior: document.getElementById("limite_superior").value,
+                        monto: document.getElementById("monto").value
+                    };
+                } else {
+                    obj = {
+                        monto: document.getElementById("monto").value
+                    };
+                }
+
+                return obj;
+            }
+            
+            function validar_campos(){
+                let selection = document.getElementById("reglaOp1").checked;
+                let j = obtener_datos();
+                
+                if(selection){
+                    if(j.monto === ''){
+                        swal("Debe completar el campo monto");
+                    }
+                    else{
+                        crear_regla();
+                    }
+                } else {
+                    if(j.monto === '' || j.limite_inferior === '' || j.limite_superior === ''){
+                        swal("Debe completar todos los campos");
+                    }
+                    else{
+                        crear_regla();
+                    }
+                }
+            }
+            
+            function crear_regla(){
+                let json = obtener_datos();
+                console.log(json);
+                
+                $.ajax({
+                    type: 'post',
+                    url:"http://localhost:9090/api/v1/reglas/",
+                    dataType:"json",
+                    data: json,
+                    success:function(data){
+                        //EL BACKEND RETORNA UN MENSAJE Y ESO OBTENGO
+                        swal(data.message.toUpperCase(), 
+                        ).then(okay => { 
+                            if (okay) {
+                                window.location.href='./listar.jsp';
+                            }
+                        });
+                    },
+                    
+                    error:function(data) {
+                        let mess = JSON.parse(data.responseText);
+                        //EL BACKEND RETORNA UN MENSAJE Y ESO OBTENGO
+                        swal(
+                            mess.message.toUpperCase(),
+                            {
+                                dangerMode: true,
+                                buttons: true
+                            }
+                        ).then(okay => { 
+                            if (okay) {
+                                //window.location.reload();
+                            }
+                        });
+                    }
+                });
+            }
+        </script>
     </body>
-    <script src="https://code.jquery.com/jquery-1.6.2.min.js"></script> 
     <script> 
-    $(document).ready(function() { 
-
-      $("#reglaOp1").click(function(){ 
-        $("#lim_inf").prop("disabled", true); 
-        $("#lim_sup").prop("disabled", true);
+        $(document).ready(function() { 
+          $("#reglaOp1").click(function(){ 
+            $("#limite_inferior").prop("disabled", true); 
+            $("#limite_superior").prop("disabled", true);
+            }); 
+          $("#reglaOp2").click(function(){ 
+            $("#limite_inferior").prop("disabled", false); 
+            $("#limite_superior").prop("disabled", false); 
+            }); 
         }); 
-
-      $("#reglaOp2").click(function(){ 
-        $("#lim_inf").prop("disabled", false); 
-        $("#lim_sup").prop("disabled", false); 
-        }); 
-    }); 
     </script> 
 </html>
 

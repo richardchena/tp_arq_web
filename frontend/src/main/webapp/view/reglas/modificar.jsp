@@ -16,8 +16,10 @@
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     </head>
-    <body>
+    <body onload="validar_url()">
         <nav class="navbar navbar-expand-lg navbar-dark tp-color">
           <a class="navbar-brand" href="/tp_arq_web">
             <img src="/tp_arq_web/img/logo.png" width="30" height="30" class="d-inline-block tp-color alejar" alt="">
@@ -73,50 +75,169 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="py-4 px-4 bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <form>
-                    
                     <div>
                         <input type="radio" id="reglaOp1"
-                               name="contact" value="sinRango" > Sin rango  <br>
+                               name="contact" value="sinRango" checked="true"> Sin rango  <br>
 
                         <input type="radio" id="reglaOp2"
-                                name="contact" value="conRango" checked="true"> Con rango <br>
+                                name="contact" value="conRango"> Con rango <br>
                     </div>
                     <div class="campo">
                       
                         <label class="la" for="inferior" >Limite inferior</label>
-                        <input class="in" id="lim_inf"  type="number" name="lim_inf" value="200000"/>
+                        <input class="in" id="limite_inferior"  type="number" name="lim_inf" disabled="true"/>
                     </div>
                     <div class="campo">
                         <label class="la" for="superior" >Limite superior</label>
-                        <input class="in" id="lim_sup"  type="number" name="lim_sup" value="499999"/>
+                        <input class="in" id="limite_superior"  type="number" name="lim_sup" disabled="true"/>
                     </div>
                     <div class="campo">
                         <label class="la" for="monto" >1 punto cada</label>
-                        <input class="in" id="monto" class="block mt-1 w-full" type="number" name="monto" value="30000"  required autofocus />
+                        <input class="in" id="monto" class="block mt-1 w-full" type="number" name="monto" :value="old('name')"  required autofocus />
                     </div>
-                   <br>
+                    <br>
                     <div class="campo">
                        <button onclick="location.href='./listar.jsp'" class="btn btn-primary text-white" type="button">Volver</button>
-                       <button onclick="location.href='#'" class="btn btn-success text-white" type="button">Guardar</button>
-
+                       <button onclick="validar_campos()" class="btn btn-success text-white" type="button">Guardar</button>
                     </div>
                 </form>
             </div>
         </div>
-    </body>
-    <script src="https://code.jquery.com/jquery-1.6.2.min.js"></script> 
+        <script>
+            function obtener_datos(){
+                const queryString = window.location.search;
+                const urlParams = new URLSearchParams(queryString);
+                
+                let selection = document.getElementById("reglaOp1").checked;
+                let obj = null;
+                
+                if(!selection){
+                    obj = {
+                        id: urlParams.get('id'),
+                        limite_inferior: document.getElementById("limite_inferior").value,
+                        limite_superior: document.getElementById("limite_superior").value,
+                        monto: document.getElementById("monto").value
+                    };
+                } else {
+                    obj = {
+                        id: urlParams.get('id'),
+                        monto: document.getElementById("monto").value
+                    };
+                }
+
+                return obj;
+            }
+            
+            function validar_campos(){
+                let selection = document.getElementById("reglaOp1").checked;
+                let j = obtener_datos();
+                
+                if(selection){
+                    if(j.monto === ''){
+                        swal("Debe completar el campo monto");
+                    }
+                    else{
+                        modificar_regla();
+                    }
+                } else {
+                    if(j.monto === '' || j.limite_inferior === '' || j.limite_superior === ''){
+                        swal("Debe completar todos los campos");
+                    }
+                    else{
+                        modificar_regla();
+                    }
+                }
+            }
+            
+            function modificar_regla(){
+                let json = obtener_datos();
+                
+                $.ajax({
+                    type: 'put',
+                    url:"http://localhost:9090/api/v1/reglas/",
+                    dataType:"json",
+                    data: json,
+                    success: function(data){
+                        //EL BACKEND RETORNA UN MENSAJE Y ESO OBTENGO
+                        swal(data.message.toUpperCase(), 
+                        ).then(okay => { 
+                            if (okay) {
+                                window.location.href='./listar.jsp';
+                            }
+                        });
+                    },
+                    
+                    error: function(data) {
+                        let mess = JSON.parse(data.responseText);
+                        //EL BACKEND RETORNA UN MENSAJE Y ESO OBTENGO
+                        swal(
+                            mess.message.toUpperCase(), 
+                            {
+                                dangerMode: true,
+                                buttons: true
+                            }
+                        ).then(okay => { 
+                            if (okay) {
+                                //window.location.reload();
+                            }
+                        });
+                    }
+                });
+            }
+            
+            function validar_url(){
+                const queryString = window.location.search;
+                const urlParams = new URLSearchParams(queryString);
+                
+                if (urlParams.has('id') && !isNaN(urlParams.get('id'))){
+                    obtener(urlParams.get('id'));
+                } else {
+                    window.location.href='./lista.jsp';
+                }
+            }
+            
+            function obtener(id){
+                $.ajax({
+                    type: 'GET',
+                    dataType:"json",
+                    url:"http://localhost:9090/api/v1/reglas/" + id,
+                    success:function(res){
+                        if(res.limite_inferior === null){
+                            document.getElementById("reglaOp1").checked = true;
+
+                        }else{
+                            document.getElementById("reglaOp2").checked = true;
+                            document.getElementById("limite_inferior").removeAttribute('disabled');
+                            document.getElementById("limite_superior").removeAttribute('disabled');
+                        }
+                        
+                        document.getElementById("limite_inferior").value = res.limite_inferior;
+                        document.getElementById("limite_superior").value = res.limite_superior;
+                        document.getElementById("monto").value = res.monto;
+                    },
+                    error:function(err) {
+                        swal(err.responseJSON.message)
+                            .then(okay => { 
+                                if (okay) {
+                                    window.location.href='./listar.jsp';
+                                }
+                            });
+                    }
+                });
+            }
+        </script>
+    </body> 
     <script> 
-    $(document).ready(function() { 
+        $(document).ready(function() { 
+          $("#reglaOp1").click(function(){ 
+            $("#limite_inferior").prop("disabled", true); 
+            $("#limite_superior").prop("disabled", true);
+            }); 
 
-      $("#reglaOp1").click(function(){ 
-        $("#lim_inf").prop("disabled", true); 
-        $("#lim_sup").prop("disabled", true);
+          $("#reglaOp2").click(function(){ 
+            $("#limite_inferior").prop("disabled", false); 
+            $("#limite_superior").prop("disabled", false); 
+            }); 
         }); 
-
-      $("#reglaOp2").click(function(){ 
-        $("#lim_inf").prop("disabled", false); 
-        $("#lim_sup").prop("disabled", false); 
-        }); 
-    }); 
     </script> 
 </html>

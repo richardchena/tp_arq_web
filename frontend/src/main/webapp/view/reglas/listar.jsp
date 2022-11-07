@@ -17,8 +17,14 @@
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
         <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+        <style>
+            .btn-primary{
+                margin-right: 5px;
+            }
+        </style>
     </head>
-    <body>
+    <body onload="fetch();">
         <nav class="navbar navbar-expand-lg navbar-dark tp-color">
           <a class="navbar-brand" href="/tp_arq_web">
             <img src="/tp_arq_web/img/logo.png" width="30" height="30" class="d-inline-block tp-color alejar" alt="">
@@ -83,43 +89,59 @@
                             <th>Controles</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        
-                        <tr>
-                            <td>200000</td>
-                            <td>499999</td>     
-                            <td>30000</td> 
-                            <td>
-                                <a class="btn btn-primary" href="/tp_arq_web/view/reglas/modificar.jsp">
-                                    Modificar
-                                </a>
-                                <button  class="btn btn-danger" type="button">Eliminar</button>
-                            </td>
-                        </tr>     
-                        <tr>
-                            <td colspan="6"></td>
-                        </tr>
-                       
-                    </tbody>
+                    <tbody id="content"></tbody>
                 </table>
              </div>
         </div>
         <script>
-            $(document).ready(function(){
-                $(".btn-danger").click(function(){
-                    swal(
-                        "¿Desea eliminar lo seleccionado?", 
-                        {
-                            dangerMode: true,
-                            buttons: true
+            function fetch() {
+                $.ajax({
+                    url:"http://localhost:9090/api/v1/reglas",
+                    dataType:"json",
+                    success:function(res){
+                       var data="";
+                       for(i=0;i<res.length;i++){
+                           let p = res[i];
+                           data+="<tr id="+ p.id + "><td>"+p.limite_inferior+"</td><td>"+p.limite_superior+"</td><td>"+p.monto+"</td>";
+                           data+='<td><button class="btn btn-primary" onclick="modificar(' + p.id + ')" type="button">Modificar</button>';
+                           data+='<button class="btn btn-danger" onclick="eliminar(' + p.id + ')" type="button">Eliminar</button></td></tr>';
                         }
-                    ).then(okay => { 
-                        if (okay) {
-                            window.location.reload();
-                        }
-                    });
+                       $('#status').html("Status : Content fetched");
+                       $('#content').html(data);
+                    },
+                    error:function() {
+                        swal("Ocurrio un error");
+                    }
                 });
-            });
+            }
+            
+            function eliminar(id){
+                swal(
+                    "¿Desea realmente eliminar?",
+                    {
+                        dangerMode: true,
+                        buttons: true
+                    }
+                ).then(okay => { 
+                    if (okay) {
+                        $.ajax({
+                            type: "DELETE",
+                            url:"http://localhost:9090/api/v1/reglas/"+id,
+                            dataType:"json",
+                            success:function(){
+                               window.location.reload();
+                            },
+                            error:function() {
+                               swal("Ha ocurrido un error");
+                            }
+                        });
+                    }
+                });
+            }
+            
+            function modificar(id){
+                window.location.href = 'modificar.jsp?id=' + id;
+            }
         </script>
     </body>
 </html>
