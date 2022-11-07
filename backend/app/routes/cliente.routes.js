@@ -15,6 +15,9 @@ module.exports = app => {
     //Eliminar
     router.delete("/:id", cliente.destroy);
 
+    //Get ID
+    router.get("/cedula/:id", cliente.get_id);
+
     //Se define la ruta de cliente
     app.use('/api/v1/cliente', router);
 };

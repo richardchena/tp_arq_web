@@ -103,3 +103,25 @@ exports.update = (req, res) => {
             });
         });
 };
+
+
+//Obtener ID dado la cedula
+exports.get_id = (req, res) => {
+    const cedula = req.params.id;;
+    Clientes.findAll(
+        { where: {doc_nro: cedula},
+          attributes: ['id']
+        })
+        .then(data => {
+            if(data === null){
+                throw('No se encontro un registro');
+            } else{
+                res.send(data);
+            }
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: "Error al obtener el ID -> " + err
+        });
+    });
+};

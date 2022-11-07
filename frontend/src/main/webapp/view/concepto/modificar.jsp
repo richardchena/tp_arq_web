@@ -15,9 +15,11 @@
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
         <title>Conceptos - Modificar</title>
     </head>
-    <body>
+    <body onload="validar_url()">
         <nav class="navbar navbar-expand-lg navbar-dark tp-color">
           <a class="navbar-brand" href="/tp_arq_web">
             <img src="/tp_arq_web/img/logo.png" width="30" height="30" class="d-inline-block tp-color alejar" alt="">
@@ -75,20 +77,112 @@
                 <form>
                     <div class="campo">
                         <label for="name" >Descripcion</label>
-                        <input id="name" class="block mt-1 w-full" type="text" name="name" value="Vale de compra"/>
+                        <input id="descripcion" class="block mt-1 w-full" type="text" name="name" value="Vale de compra"/>
                     </div>
                     <div class="campo">
                         <label for="cedula" >Puntos requeridos</label>
-                        <input id="name" class="block mt-1 w-full" type="text" name="name" value="50"/>
+                        <input id="puntos" class="block mt-1 w-full" type="text" name="name" value="50"/>
                     </div>
                     <br>
                      <div>
                         <button onclick="location.href='./listar.jsp'" class="btn btn-primary text-white" type="button">Volver</button>
-                        <button class="btn btn-success text-white" type="button">Guardar</button>
-
+                        <button onclick="validar_campos()" class="btn btn-success text-white" type="button">Modificar</button>
                      </div>
                 </form>
             </div>
         </div>
+        <script>
+            function validar_campos(){
+                let j = obtener_datos();
+                
+                if(j.descripcion === '' || 
+                   j.puntos === '') {
+                    swal("Debe completar todos los campos");
+                } else {
+                    modificar_conceptos();
+                }
+            }
+            
+            function modificar_conceptos(){
+                let json = obtener_datos();
+                
+                $.ajax({
+                    type: 'put',
+                    url:"http://localhost:9090/api/v1/conceptos/",
+                    dataType:"json",
+                    data: json,
+                    success: function(data){
+                        //EL BACKEND RETORNA UN MENSAJE Y ESO OBTENGO
+                        swal(data.message.toUpperCase(), 
+                        ).then(okay => { 
+                            if (okay) {
+                                window.location.href='./listar.jsp';
+                            }
+                        });
+                    },
+                    
+                    error: function(data) {
+                        let mess = JSON.parse(data.responseText);
+                        //EL BACKEND RETORNA UN MENSAJE Y ESO OBTENGO
+                        swal(
+                            mess.message.toUpperCase(), 
+                            {
+                                dangerMode: true,
+                                buttons: true
+                            }
+                        ).then(okay => { 
+                            if (okay) {
+                                //window.location.reload();
+                            }
+                        });
+                    }
+                });
+            }
+            
+            function obtener_datos(){
+                const queryString = window.location.search;
+                const urlParams = new URLSearchParams(queryString);
+            
+                let obj = {
+                    id: urlParams.get('id'),
+                    descripcion: document.getElementById("descripcion").value,
+                    puntos: document.getElementById("puntos").value
+                };
+                
+                return obj;
+            }
+            
+            function validar_url(){
+                const queryString = window.location.search;
+                const urlParams = new URLSearchParams(queryString);
+                
+                if (urlParams.has('id') && !isNaN(urlParams.get('id'))){
+                    obtener(urlParams.get('id'));
+                } else {
+                    window.location.href='./lista.jsp';
+                }
+            }
+            
+            function obtener(id){
+                $.ajax({
+                    type: 'GET',
+                    dataType:"json",
+                    url:"http://localhost:9090/api/v1/conceptos/" + id,
+                    success:function(res){
+                        document.getElementById("descripcion").value = res.descripcion;
+                        document.getElementById("puntos").value = res.puntos;
+                    },
+                    error:function(err) {
+                        swal(err.responseJSON.message)
+                            .then(okay => { 
+                                if (okay) {
+                                    window.location.href='./listar.jsp';
+                                }
+                            });
+                    }
+                });
+            }
+            
+        </script>
     </body>
 </html>

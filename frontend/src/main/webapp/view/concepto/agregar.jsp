@@ -15,6 +15,8 @@
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
         <title>Conceptos - Agregar</title>
     </head>
     <body>
@@ -75,21 +77,78 @@
                 <form>
                     <div class="campo">
                         <label for="name" >Descripcion</label>
-                        <input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')"  required autofocus />
+                        <input id="descripcion" class="block mt-1 w-full" type="text" name="name" :value="old('name')"  required autofocus />
                     </div>
                     <div class="campo">
                         <label for="cedula" >Puntos requeridos</label>
-                        <input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')"  required autofocus />
+                        <input id="puntos" class="block mt-1 w-full" type="number" name="name" :value="old('name')"  required autofocus />
                     </div>
                     <br>
                      <div>
                         <button onclick="location.href='./listar.jsp'" class="btn btn-primary text-white" type="button">Volver</button>
-                        <button class="btn btn-success text-white" type="button">Guardar</button>
+                        <button onclick="validar_campos()" class="btn btn-success text-white" type="button">Guardar</button>
 
                      </div>
                 </form>
             </div>
         </div>
+        <script>
+            function obtener_datos(){
+                let obj = {
+                    descripcion: document.getElementById("descripcion").value,
+                    puntos: document.getElementById("puntos").value
+                };
+                
+                return obj;
+            }
+            
+            function validar_campos(){
+                let j = obtener_datos();
+                
+                if(j.descripcion === '' || 
+                   j.puntos === '') {
+                    swal("Debe completar todos los campos");
+                } else{
+                    crear_concepto();
+                }
+            }
+            
+            function crear_concepto(){
+                let json = obtener_datos();
+                
+                $.ajax({
+                    type: 'post',
+                    url:"http://localhost:9090/api/v1/conceptos/",
+                    dataType:"json",
+                    data: json,
+                    success:function(data){
+                        //EL BACKEND RETORNA UN MENSAJE Y ESO OBTENGO
+                        swal(data.message.toUpperCase(), 
+                        ).then(okay => { 
+                            if (okay) {
+                                window.location.href='./listar.jsp';
+                            }
+                        });
+                    },
+                    
+                    error:function(data) {
+                        let mess = JSON.parse(data.responseText);
+                        //EL BACKEND RETORNA UN MENSAJE Y ESO OBTENGO
+                        swal(
+                            mess.message.toUpperCase(),
+                            {
+                                dangerMode: true,
+                                buttons: true
+                            }
+                        ).then(okay => { 
+                            if (okay) {
+                                //window.location.reload();
+                            }
+                        });
+                    }
+                });
+            }
+        </script>
     </body>
 </html>
 

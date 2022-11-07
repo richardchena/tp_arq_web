@@ -142,7 +142,7 @@
 
             function eliminar(id){
                 swal(
-                    "¿Desea eliminar el ID " + id + "?", 
+                    "¿Desea eliminar el ID: " + id + "?", 
                     {
                         dangerMode: true,
                         buttons: true
