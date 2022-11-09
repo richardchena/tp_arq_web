@@ -109,11 +109,19 @@
                 let obj = null;
                 
                 if(!selection){
-                    obj = {
-                        limite_inferior: document.getElementById("limite_inferior").value,
-                        limite_superior: document.getElementById("limite_superior").value,
-                        monto: document.getElementById("monto").value
-                    };
+                    if(document.getElementById("limite_superior").value === '') {
+                        obj = {
+                            limite_inferior: document.getElementById("limite_inferior").value,
+                            monto: document.getElementById("monto").value
+                        };
+                    } else {
+                        obj = {
+                            limite_inferior: document.getElementById("limite_inferior").value,
+                            limite_superior: document.getElementById("limite_superior").value,
+                            monto: document.getElementById("monto").value
+                        };
+                    }
+                    
                 } else {
                     obj = {
                         monto: document.getElementById("monto").value
@@ -135,7 +143,7 @@
                         crear_regla();
                     }
                 } else {
-                    if(j.monto === '' || j.limite_inferior === '' || j.limite_superior === ''){
+                    if(j.monto === '' || j.limite_inferior === ''){
                         swal("Debe completar todos los campos");
                     }
                     else{

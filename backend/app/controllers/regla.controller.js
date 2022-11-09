@@ -90,3 +90,17 @@ exports.update = (req, res) => {
             });
         });
 };
+
+
+exports.ejecutar = (req, res) => {
+    const valor = req.params.valor;
+    db.sequelize.query('select prueba('+ valor + ')')
+        .then(data => {
+            res.send(data);
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: err.message
+            });
+        });
+}

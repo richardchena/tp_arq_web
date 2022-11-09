@@ -6,6 +6,7 @@ module.exports = app => {
     router.post("/", regla.create);
 
     //Obtener
+    router.get("/query/:valor", regla.ejecutar);
     router.get("/", regla.findAll);
     router.get("/:id", regla.findOne);
 

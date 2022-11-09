@@ -17,6 +17,7 @@
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
         <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
     </head>
     <body>
         <nav class="navbar navbar-expand-lg navbar-dark tp-color">
@@ -78,22 +79,54 @@
                     Introduzca una cantidad para obtener los puntos: <input type="number" id="consulta_puntos" value="">
                 </div>
                 <div class="campo">
-                    <input class="btn btn-success text-white" value="Consultar" type="button" />
+                    <input class="btn btn-success text-white" value="Consultar" type="button" onclick="validar_campos()"/>
                 </div>
 
             </form>
         </div>
         <script>
-            $(document).ready(function(){
-                $(".btn-success").click(function(){
-                    const valor = document.getElementById("consulta_puntos").value;
-                    
-                    if (valor !== '')
-                        swal("¡El monto " + valor + " equivale a 10 puntos!");
-                    else
-                        swal("¡Debe ingresar una monto!");
+            function obtener_datos(){
+                let obj = {
+                    c: document.getElementById("consulta_puntos").value
+                };
+                
+                return obj;
+            }
+            
+            function validar_campos(){
+                let j = obtener_datos();
+                
+                if(j.c === '') {
+                    swal("Ingrese un monto");
+                } else{
+                    fetch();
+                }
+            }
+            
+            function fetch() {
+                j = obtener_datos();
+                
+                $.ajax({
+                    url:"http://localhost:9090/api/v1/reglas/query/" + j.c,
+                    dataType:"json",
+                    success:function(res){
+                        let valor = res[0][0].prueba;
+                        if (valor === null) {
+                            swal({
+                              text: "¡Verificar las reglas!",
+                              icon: "error",
+                            });
+                        }else{
+                            swal("¡El monto de " + j.c + " Gs. equivale a " + valor + " puntos!");
+                        }
+                        
+                    },
+                    error:function(err) {
+                        swal("Ocurrio un error: " + err);
+                    }
                 });
-            });
+            }
+           
         </script>
     </body>
 </html>
