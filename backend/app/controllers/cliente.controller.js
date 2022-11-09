@@ -113,7 +113,7 @@ exports.get_id = (req, res) => {
           attributes: ['id']
         })
         .then(data => {
-            if(data === null){
+            if(data.length === 0){
                 throw('No se encontro un registro');
             } else{
                 res.send(data);

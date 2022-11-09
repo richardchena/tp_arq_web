@@ -60,16 +60,22 @@ function calcular_saldo(bolsas) {
 
 exports.saldo_disponible = (req, res) => {
     const id = req.params.id;
+    var monto = req.params.monto;
     var saldo;
     var fecha_hoy = new Date();
     Bolsas.findAll({ where: {[Op.and]: [{id_cliente: id}, { saldo_puntos:{[Op.gt]: 0} },{caducidad_puntaje:{[Op.lt]: fecha_hoy}}] } })
         .then(data => {
             saldo = calcular_saldo(data);
-            res.send(saldo.toString());
+            if(saldo < monto){
+                throw('Saldo insuficiente');
+            } else{
+                res.send(saldo.toString());
+            }
+            
         })
         .catch(err => {
             res.status(500).send({
-                message: err.message || "Ocurrio un error al obtener las ventas."
+                message: err
         });
     });
 }
@@ -120,13 +126,13 @@ exports.findAll = (req, res) => {
 
 exports.get_bolsas = (req, res) => {
     const id = req.params.id;
-    var bolsas;
+  
     var monto = req.params.monto;
     var fecha_hoy = new Date();
     Bolsas.findAll({ where: {[Op.and]: [{id_cliente: id}, { saldo_puntos:{[Op.gt]: 0} },{caducidad_puntaje:{[Op.lt]: fecha_hoy}}]  }, order:[['caducidad_puntaje', 'ASC']]})
         .then(data => {
-            bolsas=calcular_fifo(data,monto);
-            res.send(data);
+            const bolsas= calcular_fifo(data,monto);
+            res.send(bolsas);
         })
         .catch(err => {
             res.status(500).send({
@@ -138,9 +144,11 @@ exports.get_bolsas = (req, res) => {
 function calcular_fifo(data, monto) {
     var falta = monto*1;
     var quitar = 0;
-    let bolsas = new Array();
+    const bolsas = {};
+    bolsas['bolsas'] = [];
+    let bolsas_ = new Array();
     data.forEach(element => {
-        let bolsa= new Map();
+        let bolsa_= new Map();
         if (falta > 0) {
             if (element.saldo_puntos <= falta) {
                 falta -= element.saldo_puntos;
@@ -149,9 +157,13 @@ function calcular_fifo(data, monto) {
                 quitar = falta;
                 falta -= quitar;
             }
-            bolsa.set("id_bolsa",element.id);
-            bolsa.set("puntaje_utilizado", quitar);
-            bolsas.push(bolsa);
+            const bolsa = {
+                "id_bolsa": element.id,
+                "id_cliente": element.id_cliente,
+                "puntaje_utilizado": element.puntaje_utilizado + quitar,
+                "saldo_puntos": element.saldo_puntos - quitar
+            }
+            bolsas['bolsas'].push(bolsa);
         }
     } )
 
@@ -175,7 +187,7 @@ exports.destroy = (req, res) => {
 };
 
 //Modificar
-/*
+
 exports.update = (req, res) => {
     const bolsa = {
         id: req.body.id,
@@ -198,7 +210,7 @@ exports.update = (req, res) => {
             });
         });
 };
-
+/*
 exports.get_bolsas = (req, res) => {
     const id = req.params.id;
     Bolsas.findAll({ where: {[Op.and]: [{id_cliente: id}, { saldo_puntos:{[Op.gt]: 0} }] }})
@@ -212,8 +224,23 @@ exports.get_bolsas = (req, res) => {
     });
 };*/
 
-exports.update = (req, res) => {
-    const bolsa = {
+exports.updateBolsas = (req, res) => {
+
+    req.body.bolsas.forEach(element => {
+        const bolsa = {
+            id: element.id_bolsa,
+            id_cliente: element.id_cliente,
+            puntaje_utilizado: element.puntaje_utilizado,
+            saldo_puntos: element.saldo_puntos
+        };
+        
+        Bolsas.update(bolsa, {where: {id: bolsa.id}});
+
+    }); res.send({message: "Se han modificado correctamente los campos"});
+};
+
+    //console.log(req.body.bolsas[0].id_bolsa);
+    /*Const bolsa = {
         id: req.body.id,
         id_cliente: req.body.id_cliente,
         asignacion_puntaje: req.body.asignacion_puntaje,
@@ -232,5 +259,5 @@ exports.update = (req, res) => {
             res.status(500).send({
                 message: err.message || "Ha ocurrido un error al modificar el registro."
             });
-        });
-};
+        });*/
+

@@ -17,6 +17,7 @@
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>        <title>JSP Page</title>
         <script src="https://code.jquery.com/jquery-3.4.1.js"></script> 
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     </head>
     <body>
         <nav class="navbar navbar-expand-lg navbar-dark tp-color">
@@ -113,48 +114,6 @@
                 añadirOpciones();
             });
             
-            
-            function obtenerMonto() {
-                var monto = $('#selector').val();
-                var id_cliente = $('#id_cliente').val();
-                verificarSaldo(id_cliente, monto);
-            }
-
-            function handleData(data) {
-                var id_cliente_;
-                var id_cliente = data;  
-                alert(data);
-                id = document.getElementById('id_cliente');
-                id.value = id_cliente;
-                id_cliente_=$('#id_cliente').val();
-                alert(id_cliente_);
-               
-            }
-
-            
-            
-            function utilizarPuntos(){
-                var cedula = $('#cedula').val();
-                encontrarId(cedula);
-
-            }
-            function encontrarId(cedula) {
-                $.ajax({
-                    url:"http://localhost:9090/api/v1/cliente/cedula/"+cedula,
-                    dataType:"json",
-                    success:function(res){
-                        var id_cliente = res[0].id;  
-                        id = document.getElementById('id_cliente');
-                        id.value = id_cliente;
-                        obtenerMonto();
-                                      
-                    },
-                    error:function() {
-                        $alert("error occured");
-                    }
-                });
-            }
-            
             function añadirOpciones() {
                 $.ajax({
                     url:"http://localhost:9090/api/v1/conceptos/",
@@ -171,21 +130,131 @@
                 });
             }
             
-            function verificarSaldo(id_cliente, monto) {
+            function utilizarPuntos(){
+                var cedula = $('#cedula').val();
+                encontrarId(cedula);
+
+            }
+            
+            function encontrarId(cedula) {
                 $.ajax({
-                    url:"http://localhost:9090/api/v1/bolsa/saldo/"+id_cliente,
+                    url:"http://localhost:9090/api/v1/cliente/cedula/"+cedula,
                     dataType:"json",
                     success:function(res){
-                       if(parseInt(res)> parseInt(monto)){
-                           alert("saldo disponible");
-                       }else{alert("saldo no disponible");}
+                        var id_cliente = res[0].id;  
+                        id = document.getElementById('id_cliente');
+                        id.value = id_cliente;
+                        obtenerMonto();
+                                      
+                    },
+                    error:function(res) {
+                         let mess = JSON.parse(res.responseText);
+                        //EL BACKEND RETORNA UN MENSAJE Y ESO OBTENGO
+                        swal(
+                            mess.message.toUpperCase(), 
+                            {
+                                dangerMode: true,
+                                buttons: true
+                            }
+                        ).then(okay => { 
+                            if (okay) {
+                                window.location.reload();
+                            }
+                        });
+                    }
+                });
+            }
+            
+            function obtenerMonto() {
+                var monto = $('#selector').val();
+                var id_cliente = $('#id_cliente').val();
+                verificarSaldo(id_cliente, monto);
+            }
+            
+            function verificarSaldo(id_cliente, monto) {
+                $.ajax({
+                    url:"http://localhost:9090/api/v1/bolsa/saldo/"+id_cliente+"/"+monto,
+                    dataType:"json",
+                    success:function(res){
+                        obtenerBolsas(id_cliente, monto);
                                         
+                    },
+                    error:function(res) {
+                        let mess = JSON.parse(res.responseText);
+                        //EL BACKEND RETORNA UN MENSAJE Y ESO OBTENGO
+                        swal(
+                            mess.message.toUpperCase(), 
+                            {
+                                dangerMode: true,
+                                buttons: true
+                            }
+                        ).then(okay => { 
+                            if (okay) {
+                                window.location.reload();
+                            }
+                        });
+                    }
+                });
+            }
+            
+            function obtenerBolsas(id_cliente, monto) {
+                $.ajax({
+                    url:"http://localhost:9090/api/v1/bolsa/bolsas/"+id_cliente+"/"+monto,
+                    dataType:"json",
+                    success:function(res){
+                        //alert(res.bolsas[0].puntaje_utilizado);
+                        quitarBolsas(res);
+                                      
                     },
                     error:function() {
                         $alert("error occured");
                     }
                 });
             }
+            
+            function quitarBolsas(bolsas) {
+                $.ajax({
+                    type: 'put',
+                    url:"http://localhost:9090/api/v1/bolsa/bolsas",
+                    dataType:"json",
+                    data: bolsas,
+                    success:function(data){
+                        
+                         alert("succes");
+                        //quitarBolsas(res);
+                                      
+                    },
+                    error:function() {
+                        $alert("error occured");
+                    }
+                });
+            }
+
+                       
+                
+          
+
+            function handleData(data) {
+                var id_cliente_;
+                var id_cliente = data;  
+                alert(data);
+                id = document.getElementById('id_cliente');
+                id.value = id_cliente;
+                id_cliente_=$('#id_cliente').val();
+                alert(id_cliente_);
+               
+            }
+
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
 
             
             function hola(){
