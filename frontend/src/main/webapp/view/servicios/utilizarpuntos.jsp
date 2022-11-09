@@ -203,7 +203,7 @@
                     dataType:"json",
                     success:function(res){
                         //alert(res.bolsas[0].puntaje_utilizado);
-                        quitarBolsas(res);
+                        actualizarBolsas(res);
                                       
                     },
                     error:function() {
@@ -212,16 +212,14 @@
                 });
             }
             
-            function quitarBolsas(bolsas) {
+            function actualizarBolsas(bolsas) {
                 $.ajax({
                     type: 'put',
                     url:"http://localhost:9090/api/v1/bolsa/bolsas",
                     dataType:"json",
                     data: bolsas,
                     success:function(data){
-                        
-                         alert("succes");
-                        //quitarBolsas(res);
+                         crearCabecera();
                                       
                     },
                     error:function() {
@@ -229,37 +227,42 @@
                     }
                 });
             }
+            
+            
+            function crearCabecera() {
+                let cabecera = obtenerDatosCabecera();
 
-                       
+    
+                $.ajax({
+                    type: 'POST',
+                    url:"http://localhost:9090/api/v1/cabecera",
+                    dataType:"json",
+                    data: cabecera,
+                    success:function(data){
+                                                 
+                    },
+                    error:function() {
+                        $alert("error occured");
+                    }
+                });
+            }
+            
+            function obtenerDatosCabecera(){
+                var monto = $('#selector').val();
+                var id_cliente = $('#id_cliente').val();
+                var concepto = $('#selector option:selected').text().toString();
+                var fecha = Date();
+                let cabecera = {
+                    id_cliente: id_cliente,
+                    puntaje_utilizado: monto,
+                    fecha: fecha,
+                    concepto: concepto
+                };
                 
+                return cabecera;
+            }
+
           
-
-            function handleData(data) {
-                var id_cliente_;
-                var id_cliente = data;  
-                alert(data);
-                id = document.getElementById('id_cliente');
-                id.value = id_cliente;
-                id_cliente_=$('#id_cliente').val();
-                alert(id_cliente_);
-               
-            }
-
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-
-            
-            function hola(){
-                alert("sfskflm");
-            }
         </script>
     </body>
 </html>

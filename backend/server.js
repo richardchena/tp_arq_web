@@ -31,6 +31,7 @@ require("./app/routes/parametro.routes")(app);
 require("./app/routes/bolsa.routes")(app);
 require("./app/routes/conceptos.routes")(app);
 require("./app/routes/reglas.routes")(app);
+require("./app/routes/cabecera.routes")(app);
 
 app.listen(PORT, () => {
     console.log('Servidor corriendo en puerto 9090.');
