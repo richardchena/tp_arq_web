@@ -5,6 +5,6 @@ module.exports = app => {
     router.get("/", parametro.findAll);
     router.get("/:id", parametro.findOne);
     router.delete("/:id", parametro.destroy);
-    router.put("/", parametro.update)
+    router.put("/", parametro.update);
     app.use('/api/v1/parametro', router);
 };

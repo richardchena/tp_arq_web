@@ -76,20 +76,18 @@
                 <form>
                     <div class="campo">
                       <label for="cedula">Cedula del cliente</label>
-                      <input type="number" id="cedula" value=10010>
+                      <input type="number" id="cedula">
+                      <input type="number" id="id_cliente" type hidden>
                     </div>
                     <div class="campo">
-                      <label for="inputState">Concepto</label>
-                      <select id="inputState">
-                        <option selected>Seleccionar</option>
-                        <option>Vale de consumision</option>
-                        <option>Vale de regalo</option>
-                        <option>...</option>
+                      <label  for="inputState">Concepto</label>
+                      <select id="selector"> 
+                          <option value=0 selected>Seleccionar</option>
                       </select>
                     </div>
                     <br>
                     <div class="campo">
-                       <button onclick="encontrar_id();" class="btn btn-success text-white" type="button">Utilizar puntos</button>
+                       <button onclick="utilizarPuntos();" class="btn btn-success text-white" type="button">Utilizar puntos</button>
                     </div>
                 </form> 
             </div>
@@ -111,56 +109,77 @@
                 });
             });
             
-            function encontrar_id() {
+            $(document).ready(function(){
+                añadirOpciones();
+            });
+            
+            
+            function obtenerMonto() {
+                var monto = $('#selector').val();
+                var id_cliente = $('#id_cliente').val();
+                verificarSaldo(id_cliente, monto);
+            }
+
+            function handleData(data) {
+                var id_cliente_;
+                var id_cliente = data;  
+                alert(data);
+                id = document.getElementById('id_cliente');
+                id.value = id_cliente;
+                id_cliente_=$('#id_cliente').val();
+                alert(id_cliente_);
+               
+            }
+
+            
+            
+            function utilizarPuntos(){
+                var cedula = $('#cedula').val();
+                encontrarId(cedula);
+
+            }
+            function encontrarId(cedula) {
                 $.ajax({
-                    url:"http://localhost:9090/api/v1/bolsa?id="+1,
+                    url:"http://localhost:9090/api/v1/cliente/cedula/"+cedula,
                     dataType:"json",
                     success:function(res){
-                        var j=0;
-                        var caducidad = res[0].caducidad_puntaje;
-                        
-                        for(i=0;i<res.length;i++){
-                            let p = res[i];
-                            if(p.caducidad_puntaje > caducidad){
-                                caducidad=p.caducidad_puntaje;
-                                j=i;
-                            }
-                            alert(id);
-                        }
-                        
-                        var id = res[j].id;
-                        var id_cliente= res[j].id_cliente;
-                        var asignacion_puntaje= res[j].asignacion_puntaje;
-                        var caducidad_puntaje= res[j].caducidad_puntaje;
-                        var puntaje_asignado= res[j].puntaje_asignado;
-                        var puntaje_utilizado= res[j].puntaje_utilizado;
-                        var saldo_puntos= res[j].saldo_puntos;
-                        var monto_operacion= res[j].monto_operacion;
-                        var bolsa = {
-                            "id":id,
-                            "id_cliente": id_cliente,
-                            "asignacion_puntaje": asignacion_puntaje,
-                            "caducidad_puntaje": caducidad_puntaje,
-                            "puntaje_asignado": puntaje_asignado,
-                            "puntaje_utilizado": 1,
-                            "saldo_puntos": saldo_puntos-1,
-                            "monto_operacion": monto_operacion
-                        };
-                        $.ajax({
-                            data: bolsa,
-                            type: "POST",
-                            url:"http://localhost:9090/api/v1/bolsa",
-                            dataType:"json",
-                            success:function(data){
-                                   alert("holis");
-                            },
-                            error:function() {
-                                $alert("error occured");
-                            }
-                        });
-
-                       
-                       
+                        var id_cliente = res[0].id;  
+                        id = document.getElementById('id_cliente');
+                        id.value = id_cliente;
+                        obtenerMonto();
+                                      
+                    },
+                    error:function() {
+                        $alert("error occured");
+                    }
+                });
+            }
+            
+            function añadirOpciones() {
+                $.ajax({
+                    url:"http://localhost:9090/api/v1/conceptos/",
+                    dataType:"json",
+                    success:function(res){
+                        var len = res.length;
+                        for( var i = 0; i<len; i++){
+                            $("#selector").append('<option value="'+res[i].puntos+'">'+res[i].descripcion+'</option>');
+                        }                
+                    },
+                    error:function() {
+                        $alert("error occured");
+                    }
+                });
+            }
+            
+            function verificarSaldo(id_cliente, monto) {
+                $.ajax({
+                    url:"http://localhost:9090/api/v1/bolsa/saldo/"+id_cliente,
+                    dataType:"json",
+                    success:function(res){
+                       if(parseInt(res)> parseInt(monto)){
+                           alert("saldo disponible");
+                       }else{alert("saldo no disponible");}
+                                        
                     },
                     error:function() {
                         $alert("error occured");
