@@ -217,6 +217,7 @@
                         document.getElementById("nac").value = res.nacionalidad;
                         document.getElementById("email").value = res.email;
                         document.getElementById("tel").value = res.telefono;
+                        alert(res.fec_nac);
                         fec = res.fec_nac.substr(0, 10);
                         document.getElementById("fec").value = fec;
                     },

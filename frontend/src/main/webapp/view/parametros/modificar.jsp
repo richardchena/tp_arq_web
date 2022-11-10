@@ -78,7 +78,7 @@
                     <div class="campo">
                       
                         <label class="la" for="ini" >Inicio validez</label>
-                        <input class="in" id="ini_validez"  type="date" name="inicio" required=""/>
+                        <input class="in" id="ini_validez"  type="date" name="inicio" />
                     </div>
                     <div class="campo">
                         <label class="la" for="fin" >Fin validez</label>
@@ -165,17 +165,10 @@
                     dataType:"json",
                     url:"http://localhost:9090/api/v1/parametro/" + id,
                     success:function(res){
-                        var fecha_res = new Date(res.ini_validez);
-                        var dia = fecha_res.getDate(); 
-                        var mes =  ("0" + (fecha_res.getMonth() + 1));
-                        var anio = fecha_res.getFullYear(); 
-
-                        var fechatotal = dia + "/"+ mes +"/" + anio;
-                     
-                        document.getElementById("ini_validez").value = fechatotal;
-
-                        $("#ini_validez").html('fechatotal');
-
+                        fec = res.ini_validez.substr(0, 10);
+                        fec_fin = res.fin_validez.substr(0, 10);
+                        document.getElementById("ini_validez").value = fec;
+                        document.getElementById("fin_validez").value = fec_fin;
                         document.getElementById("duracion").value = res.duracion;
                     },
                     error:function(err) {
