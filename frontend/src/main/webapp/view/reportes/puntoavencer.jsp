@@ -19,7 +19,7 @@
         </style>
         <title>Clientes</title>
     </head>
-    <body onload="fetch();">
+    <body>
         <nav class="navbar navbar-expand-lg navbar-dark tp-color">
           <a class="navbar-brand" href="/tp_arq_web">
             <img src="/tp_arq_web/img/logo.png" width="30" height="30" class="d-inline-block tp-color alejar" alt="">
@@ -78,15 +78,17 @@
                     
                     <div class="consulta">
                       <label for="nombre">Ingrese dia
-                      <input type="text" id="nombre" required></label>
-                      <button id="boton" class="btn btn-success text-white" type="button">Consultar</button>
+                      <input type="text" id="dias" required></label>
+                      <button onclick="mostrar()" id="boton" class="btn btn-success text-white" type="button">Consultar</button>
                     </div>
                     
                     <thead>
                         <tr>
-                            <th>#</th>
-                            <th>#</th>
-                            <Th>#</Th>                             
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <Th>Nro. documento</Th>
+                            <th>Saldo puntos</th>
+                            <th>Vencimiento</th>
                         </tr>
                     </thead>
                     <tbody id="content"></tbody>
@@ -94,32 +96,26 @@
              </div>
         </div>
         <script>
-            
-            function fetch() {
-                const nombre = document.querySelector('#nombre');
-                const boton = document.querySelector('#boton');
-                const filtrar = () =>{
-                    const campo = nombre.value.toLowerCase();
-                    $.ajax({
-                        url:"http://localhost:9090/api/v1/cabecera",
-                        dataType:"json",
-                        success:function(res){
-                           var data="";
-                           for(i=0;i<res.length;i++){
-                               let p = res[i];
-                               if(p.concepto === campo || p.fecha === campo || p.id_cliente === campo){
-                                    data+="<tr id="+ p.concepto + "><td>"+p.fecha+"</td><td>"+p.id_cliente+"</td></tr>";
-                                }
-                            }
-                           $('#status').html("Status : Content fetched");
-                           $('#content').html(data);
-                        },
-                        error:function() {
-                            swal("Ocurrio un error");
+            function mostrar() {
+                const dias = document.getElementById("dias").value;
+                
+                $.ajax({
+                    url:"http://localhost:9090/api/v1/bolsa/dias/" + dias,
+                    dataType:"json",
+                    success:function(res2){
+                       let res = res2[0];
+                       var data="";
+                       for(i=0;i<res.length;i++){
+                           let p = res[i];
+                              data+="<tr id="+ p.id_cliente + "><td>"+p.id_cliente+"</td><td>"+p.nombre+"</td><td>"+p.doc_nro+"</td><td>"+p.saldo_puntos+"</td><td>"+p.vencimiento+"</td></tr>";
                         }
-                    });
-                };     
-                boton.addEventListener('click', filtrar); 
+                       $('#status').html("Status : Content fetched");
+                       $('#content').html(data);
+                    },
+                    error:function() {
+                        swal("Ocurrio un error");
+                    }
+                }); 
             }
                         
         </script>

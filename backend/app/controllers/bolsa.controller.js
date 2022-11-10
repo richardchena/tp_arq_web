@@ -267,3 +267,15 @@ exports.updateBolsas = (req, res) => {
             });
         });*/
 
+exports.dias_vencer = (req, res) => {
+    const dias = req.params.dias;
+    db.sequelize.query('SELECT a.id_cliente, b.nombre, b.doc_nro, a.saldo_puntos, date(a.caducidad_puntaje) as vencimiento FROM public."TP_ARQ_BOLSAs" a INNER JOIN public."TP_ARQ_CLIENTEs" b ON b.id = a.id_cliente WHERE date(caducidad_puntaje) = date(current_date) + ' + dias)
+        .then(data => {
+            res.send(data);
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: err.message
+            });
+        });
+}

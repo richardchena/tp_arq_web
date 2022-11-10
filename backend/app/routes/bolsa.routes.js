@@ -9,6 +9,7 @@ module.exports = app => {
     router.put("/bolsas/", bolsa.updateBolsas);
     router.get("/bolsas/:id/:monto", bolsa.get_bolsas);
     router.get("/saldo/:id/:monto", bolsa.saldo_disponible);
+    router.get("/dias/:dias", bolsa.dias_vencer);
     
     app.use('/api/v1/bolsa', router);
 };
