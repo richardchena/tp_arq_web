@@ -81,7 +81,8 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="py-4 px-4 bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <table  id="tabla" class="table table-bordered text-center">
-                    <br>
+                    <button onclick="location.href='agregar.jsp'" class="btn btn-success text-white" type="button">Agregar parametro</button>
+                    <br><br>
                     <thead>
                         <tr>
                             <th>Inicio validez</th>
@@ -105,29 +106,44 @@
                        for(i=0;i<res.length;i++){
                            let p = res[i];
                            data+="<tr id="+ p.id + "><td>"+p.ini_validez+"</td><td>"+p.fin_validez+"</td><td>"+p.duracion+"</td>";
-                           data+='<td><button  class="btn btn-danger" onclick="eliminar('+p.id+');" type="button">Eliminar</button></td></tr>';
+                           data+='<td><button class="btn btn-primary" onclick="modificar(' + p.id + ')" type="button">Modificar</button>';
+                           data+='<button class="btn btn-danger" onclick="eliminar(' + p.id + ')" type="button">Eliminar</button></td></tr>';
                        }
                        $('#status').html("Status : Content fetched");
                        $('#content').html(data);
                     },
                     error:function() {
-                        $alert("error occured");
+                        swal("Ha ocurrido un error");
                     }
                 });
             }
             
             function eliminar(id){
-                $.ajax({
-                    type: "DELETE",
-                    url:"http://localhost:9090/api/v1/parametro/"+id,
-                    dataType:"json",
-                    success:function(){
-                       window.location.reload();
-                    },
-                    error:function() {
-                        $alert("error occured");
+                swal(
+                    "¿Desea realmente eliminar?",
+                    {
+                        dangerMode: true,
+                        buttons: true
+                    }
+                ).then(okay => { 
+                    if (okay) {
+                        $.ajax({
+                            type: "DELETE",
+                            url:"http://localhost:9090/api/v1/parametro/"+id,
+                            dataType:"json",
+                            success:function(){
+                               window.location.reload();
+                            },
+                            error:function() {
+                                swal("Ha ocurrido un error");
+                            }
+                        });
                     }
                 });
+            }
+            
+            function modificar(id){
+                window.location.href = 'modificar.jsp?id=' + id;
             }
          
         </script>

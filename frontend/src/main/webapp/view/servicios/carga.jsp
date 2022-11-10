@@ -15,6 +15,8 @@
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
         <title>Cargar puntos</title>
     </head>
     <body>
@@ -74,21 +76,143 @@
             <div class="py-4 px-4 bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <form>
                     <div class="campo">
-                      <label for="inputEmail4">Cedula del cliente</label>
-                      <input type="email" id="inputEmail4">
+                      <label for="cedula">Cedula del cliente</label>
+                      <input type="number" id="cedula">
+                      <input type="number" id="id_cliente" type hidden>
                     </div>
 
                     <div class="campo">
-                      <label for="inputPassword4">Monto de la operacion</label>
-                      <input type="password" id="inputPassword4">
+                      <label for="montoperacion">Monto de la operacion</label>
+                      <input type="number" id="monto">
                     </div>
                     <br>
                     <div class="campo">
-                       <button onclick="location.href='#'" class="btn btn-success text-white" type="button">Cargar puntos</button>
+                       <button onclick="cargarPuntos();" class="btn btn-success text-white" type="button">Cargar puntos</button>
                     </div>
                 </form>   
             </div>
         </div>
+        <script>
+            function cargarPuntos(){
+                var cedula = $('#cedula').val();
+                encontrarId(cedula);
+
+            }
+            
+            function encontrarId(cedula) {
+                $.ajax({
+                    url:"http://localhost:9090/api/v1/cliente/cedula/"+cedula,
+                    dataType:"json",
+                    success:function(res){
+                        var id_cliente = res[0].id;  
+                        id = document.getElementById('id_cliente');
+                        id.value = id_cliente;
+                        obtenerPuntos();
+                                      
+                    },
+                    error:function(res) {
+                         let mess = JSON.parse(res.responseText);
+                        //EL BACKEND RETORNA UN MENSAJE Y ESO OBTENGO
+                        swal(
+                            mess.message.toUpperCase(), 
+                            {
+                                dangerMode: true,
+                                buttons: true
+                            }
+                        ).then(okay => { 
+                            if (okay) {
+                                window.location.reload();
+                            }
+                        });
+                    }
+                });
+            }
+            
+            function obtenerMonto() {
+                var monto = $('#monto').val();
+                let obj = {
+                    c: monto,
+                };
+                return obj;
+            }
+            
+            function obtenerPuntos(){
+                j = obtenerMonto();
+                
+                $.ajax({
+                    url:"http://localhost:9090/api/v1/reglas/query/" + j.c,
+                    dataType:"json",
+                    success:function(res){
+                        let valor = res[0][0].prueba;
+                        if (valor === null) {
+                            swal({
+                              text: "¡Verificar las reglas!",
+                              icon: "error"
+                            });
+                        }else{
+                            calcularFecha(valor);
+              
+                        }
+                        
+                    },
+                    error:function(err) {
+                        swal("Ocurrio un error: " + err);
+                    }
+                });
+            }
+            
+            function calcularFecha(puntos) {
+    
+                $.ajax({
+                    type: 'GET',
+                    url:"http://localhost:9090/api/v1/parametro/caducidad/",
+                    dataType:"json",
+                    success:function(res){
+                        crearBolsa(res, puntos);
+                    },
+                    error:function() {
+                        alert("error occured");
+                    }
+                });
+            }
+            
+            function crearBolsa(res, puntos){
+                bolsa = obtenerDatos(res, puntos);
+                $.ajax({
+                    type: 'POST',
+                    url:"http://localhost:9090/api/v1/bolsa",
+                    dataType:"json",
+                    data: bolsa,
+                    success:function(data){
+                        window.location.reload();                   
+                    },
+                    error:function() {
+                        $alert("error occured");
+                    }
+                });
+            }
+            
+            function obtenerDatos(res, puntos){
+                var id_cliente = $('#id_cliente').val();
+                var monto = $('#monto').val();
+                var puntos_asignados = puntos;
+                var fecha_asignacion = Date();
+                var fecha_caducidad = res;
+                var puntaje_utilizado = 0;
+
+                let bolsa = {
+                    id_cliente: id_cliente,
+                    asignacion_puntaje: fecha_asignacion,
+                    caducidad_puntaje: fecha_caducidad,
+                    puntaje_asignado: puntos_asignados,
+                    puntaje_utilizado: puntaje_utilizado,
+                    saldo_puntos: puntos_asignados,
+                    monto_operacion: monto
+                };
+                
+                return bolsa;
+            }
+        </script>
      
     </body>
 </html>

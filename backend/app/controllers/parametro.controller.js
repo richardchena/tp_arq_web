@@ -13,7 +13,9 @@ exports.create = (req, res) => {
     // Guardamos a la base de datos
     Parametros.create(parametro)
         .then(data => {
-            res.send(data);
+            res.status(200).send({
+                message: "Se ha creado el parametro"
+            });
         })
         .catch(err => {
             res.status(500).send({
@@ -82,4 +84,25 @@ exports.update = (req, res) => {
                 message: err.message || "Ha ocurrido un error al modificar el registro."
             });
         });
+};
+
+exports.encontrarFecha = (req, res) => {
+    var fecha_hoy = new Date();
+    var fecha;
+    Parametros.findAll({ where: {fin_validez: {[Op.gt]: fecha_hoy}} })
+        .then(data => {
+            if(data.length === 1){
+                fecha = fecha_hoy.getDate() + parseInt(data[0].duracion);
+                fecha_hoy.setDate(fecha);
+                res.send(fecha_hoy);
+            } else{
+                throw('No se encontro un registro');
+            }
+
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: err.message || "Ocurrio un error al obtener los parametros."
+        });
+    });
 };

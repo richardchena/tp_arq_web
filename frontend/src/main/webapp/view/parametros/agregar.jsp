@@ -1,5 +1,5 @@
 <%-- 
-    Document   : modificar parametro
+    Document   : agregar_concepto
     Created on : Sep 20, 2022, 6:47:00 PM
     Author     : HP
 --%>
@@ -8,7 +8,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Parametro - Modificar</title>
+        <title>Parametro - Agregar</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="stylesheet" type="text/css" href="/tp_arq_web/styles/style.css">
         <link rel="stylesheet" type="text/css" href="/tp_arq_web/styles/style_cabecera.css">
@@ -19,7 +19,7 @@
         <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
         <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     </head>
-    <body onload="validar_url()">
+    <body>
         <nav class="navbar navbar-expand-lg navbar-dark tp-color">
           <a class="navbar-brand" href="/tp_arq_web">
             <img src="/tp_arq_web/img/logo.png" width="30" height="30" class="d-inline-block tp-color alejar" alt="">
@@ -71,7 +71,7 @@
             </ul>
           </div>
         </nav>
-        <h3>Modificar Parametro</h3>
+        <h3>Agregar Parametro</h3>
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="py-4 px-4 bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <form>
@@ -144,47 +144,6 @@
                                 window.location.reload();
                             }
                         });
-                    }
-                });
-            }
-            
-            function validar_url(){
-                const queryString = window.location.search;
-                const urlParams = new URLSearchParams(queryString);
-                
-                if (urlParams.has('id') && !isNaN(urlParams.get('id'))){
-                    obtener(urlParams.get('id'));
-                } else {
-                    window.location.href='./parametro.jsp';
-                }
-            }
-            
-            function obtener(id){
-                $.ajax({
-                    type: 'GET',
-                    dataType:"json",
-                    url:"http://localhost:9090/api/v1/parametro/" + id,
-                    success:function(res){
-                        var fecha_res = new Date(res.ini_validez);
-                        var dia = fecha_res.getDate(); 
-                        var mes =  ("0" + (fecha_res.getMonth() + 1));
-                        var anio = fecha_res.getFullYear(); 
-
-                        var fechatotal = dia + "/"+ mes +"/" + anio;
-                     
-                        document.getElementById("ini_validez").value = fechatotal;
-
-                        $("#ini_validez").html('fechatotal');
-
-                        document.getElementById("duracion").value = res.duracion;
-                    },
-                    error:function(err) {
-                        swal(err.responseJSON.message)
-                            .then(okay => { 
-                                if (okay) {
-                                    window.location.href='./parametro.jsp';
-                                }
-                            });
                     }
                 });
             }

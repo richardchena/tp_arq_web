@@ -3,6 +3,7 @@ module.exports = app => {
     var router = require("express").Router();
     router.post("/", parametro.create);
     router.get("/", parametro.findAll);
+    router.get("/caducidad/", parametro.encontrarFecha);
     router.get("/:id", parametro.findOne);
     router.delete("/:id", parametro.destroy);
     router.put("/", parametro.update);

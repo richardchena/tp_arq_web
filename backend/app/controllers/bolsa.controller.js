@@ -63,7 +63,7 @@ exports.saldo_disponible = (req, res) => {
     var monto = req.params.monto;
     var saldo;
     var fecha_hoy = new Date();
-    Bolsas.findAll({ where: {[Op.and]: [{id_cliente: id}, { saldo_puntos:{[Op.gt]: 0} },{caducidad_puntaje:{[Op.lt]: fecha_hoy}}] } })
+    Bolsas.findAll({ where: {[Op.and]: [{id_cliente: id}, { saldo_puntos:{[Op.gt]: 0} },{caducidad_puntaje:{[Op.gt]: fecha_hoy}}] } })
         .then(data => {
             saldo = calcular_saldo(data);
             if(saldo < monto){
@@ -129,10 +129,16 @@ exports.get_bolsas = (req, res) => {
   
     var monto = req.params.monto;
     var fecha_hoy = new Date();
-    Bolsas.findAll({ where: {[Op.and]: [{id_cliente: id}, { saldo_puntos:{[Op.gt]: 0} },{caducidad_puntaje:{[Op.lt]: fecha_hoy}}]  }, order:[['caducidad_puntaje', 'ASC']]})
+    console.log(fecha_hoy);
+    Bolsas.findAll({ where: {[Op.and]: [{id_cliente: id}, { saldo_puntos:{[Op.gt]: 0} },{caducidad_puntaje:{[Op.gt]: fecha_hoy}}]  }, order:[['caducidad_puntaje', 'ASC']]})
         .then(data => {
-            const bolsas= calcular_fifo(data,monto);
-            res.send(bolsas);
+            if(data.length === 0){
+                throw('No se encontro un registro');
+            } else{
+                const bolsas= calcular_fifo(data,monto);
+                res.send(bolsas);
+            }
+
         })
         .catch(err => {
             res.status(500).send({
@@ -160,7 +166,7 @@ function calcular_fifo(data, monto) {
             const bolsa = {
                 "id_bolsa": element.id,
                 "id_cliente": element.id_cliente,
-                "puntaje_utilizado": element.puntaje_utilizado + quitar,
+                "puntaje_utilizado": parseInt(element.puntaje_utilizado) + parseInt(quitar),
                 "saldo_puntos": element.saldo_puntos - quitar
             }
             bolsas['bolsas'].push(bolsa);
