@@ -45,8 +45,8 @@ exports.findOne = (req, res) => {
 //Obtener todos los campos
 exports.findAll = (req, res) => {
     const nombre = req.query.nombre;
-    var condition = nombre ? { cliente: { [Op.iLike]: `%${nombre}%` } } : null;
-    Clientes.findAll({ where: condition, order: [['id']] })
+    var condition = nombre ? { cabecera: { [Op.iLike]: `%${nombre}%` } } : null;
+    Cabeceras.findAll({ where: condition, order: [['id']] })
         .then(data => {
             res.send(data);
         })

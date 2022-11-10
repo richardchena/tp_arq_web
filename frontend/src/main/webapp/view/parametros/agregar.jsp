@@ -46,10 +46,10 @@
                   Reportes
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                  <a class="dropdown-item" href="#">Uso de puntos</a>
-                  <a class="dropdown-item" href="#">Bolsa de puntos</a>
-                  <a class="dropdown-item" href="#">Clientes con puntos a vencer</a>
-                  <a class="dropdown-item" href="#">Clientes</a>
+                  <a class="dropdown-item" href="/tp_arq_web/view/reportes/usopuntos.jsp">Uso de puntos</a>
+                  <a class="dropdown-item" href="/tp_arq_web/view/reportes/bolsapuntos.jsp">Bolsa de puntos</a>
+                  <a class="dropdown-item" href="/tp_arq_web/view/reportes/puntoavencer.jsp">Clientes con puntos a vencer</a>
+                  <a class="dropdown-item" href="/tp_arq_web/view/reportes/cliente.jsp">Clientes</a>
                 </div>
               </li>
               <li class="nav-item dropdown">

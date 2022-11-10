@@ -46,10 +46,10 @@
                   Reportes
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                  <a class="dropdown-item" href="#">Uso de puntos</a>
-                  <a class="dropdown-item" href="#">Bolsa de puntos</a>
-                  <a class="dropdown-item" href="#">Clientes con puntos a vencer</a>
-                  <a class="dropdown-item" href="#">Clientes</a>
+                  <a class="dropdown-item" href="/tp_arq_web/view/reportes/usopuntos.jsp">Uso de puntos</a>
+                  <a class="dropdown-item" href="/tp_arq_web/view/reportes/bolsapuntos.jsp">Bolsa de puntos</a>
+                  <a class="dropdown-item" href="/tp_arq_web/view/reportes/puntoavencer.jsp">Clientes con puntos a vencer</a>
+                  <a class="dropdown-item" href="/tp_arq_web/view/reportes/cliente.jsp">Clientes</a>
                 </div>
               </li>
               <li class="nav-item dropdown">
@@ -79,6 +79,7 @@
                       
                         <label class="la" for="ini" >Inicio validez</label>
                         <input class="in" id="ini_validez"  type="date" name="inicio" />
+                        <input type="number" id="id_cliente" type hidden>
                     </div>
                     <div class="campo">
                         <label class="la" for="fin" >Fin validez</label>
@@ -91,17 +92,19 @@
                     <br>
                     <div class="campo">
                        <button onclick="location.href='./parametro.jsp'" class="btn btn-primary text-white" type="button">Volver</button>
-                       <button onclick="crearParametro()" class="btn btn-success text-white" type="button">Guardar</button>
+                       <button onclick="modificarParametro()" class="btn btn-success text-white" type="button">Guardar</button>
                     </div>
                 </form>
             </div>
         </div>
         <script>
             function obtenerDatos(){
+                var id = $('#id_cliente').val();
                 var inicio = $('#ini_validez').val();
                 var fin = $('#fin_validez').val();
                 var duracion = $('#duracion').val();
                 let parametro = {
+                    id: id,
                     ini_validez: inicio,
                     fin_validez: fin,
                     duracion: duracion
@@ -111,13 +114,11 @@
                 return parametro;
             }
             
-            
-            function crearParametro(){
+
+            function modificarParametro(){
                 let parametro = obtenerDatos();
-                console.log(parametro);
-                
                 $.ajax({
-                    type: 'POST',
+                    type: 'PUT',
                     url:"http://localhost:9090/api/v1/parametro/",
                     dataType:"json",
                     data: parametro,
@@ -148,7 +149,7 @@
                 });
             }
             
-            function validar_url(){
+             function validar_url(){
                 const queryString = window.location.search;
                 const urlParams = new URLSearchParams(queryString);
                 
@@ -165,6 +166,7 @@
                     dataType:"json",
                     url:"http://localhost:9090/api/v1/parametro/" + id,
                     success:function(res){
+                        document.getElementById("id_cliente").value = id;
                         fec = res.ini_validez.substr(0, 10);
                         fec_fin = res.fin_validez.substr(0, 10);
                         document.getElementById("ini_validez").value = fec;

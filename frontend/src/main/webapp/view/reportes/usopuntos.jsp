@@ -108,7 +108,7 @@
                            for(i=0;i<res.length;i++){
                                let p = res[i];
                                if(p.concepto === campo || p.fecha === campo || p.id_cliente === campo){
-                                    data+="<tr id="+ p.concepto + "><td>"+p.fecha+"</td><td>"+p.id_cliente+"</td></tr>";
+                                    data+="<tr id="+ p.id + "><td>"+p.concepto+"</td><td>"+p.fecha.substr(0, 10)+"</td><td>"+p.id_cliente+"</td></tr>";
                                 }
                             }
                            $('#status').html("Status : Content fetched");

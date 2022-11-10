@@ -24,6 +24,11 @@
         <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
         <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+        <style>
+            .btn-primary{
+                margin-right: 5px;
+            }
+        </style>
     </head>
         <body onload="fetch();">
         <nav class="navbar navbar-expand-lg navbar-dark tp-color">
@@ -52,10 +57,10 @@
                   Reportes
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                  <a class="dropdown-item" href="#">Uso de puntos</a>
-                  <a class="dropdown-item" href="#">Bolsa de puntos</a>
-                  <a class="dropdown-item" href="#">Clientes con puntos a vencer</a>
-                  <a class="dropdown-item" href="#">Clientes</a>
+                  <a class="dropdown-item" href="/tp_arq_web/view/reportes/usopuntos.jsp">Uso de puntos</a>
+                  <a class="dropdown-item" href="/tp_arq_web/view/reportes/bolsapuntos.jsp">Bolsa de puntos</a>
+                  <a class="dropdown-item" href="/tp_arq_web/view/reportes/puntoavencer.jsp">Clientes con puntos a vencer</a>
+                  <a class="dropdown-item" href="/tp_arq_web/view/reportes/cliente.jsp">Clientes</a>
                 </div>
               </li>
               <li class="nav-item dropdown">
@@ -105,7 +110,7 @@
                        var data="";
                        for(i=0;i<res.length;i++){
                            let p = res[i];
-                           data+="<tr id="+ p.id + "><td>"+p.ini_validez+"</td><td>"+p.fin_validez+"</td><td>"+p.duracion+"</td>";
+                           data+="<tr id="+ p.id + "><td>"+p.ini_validez.substr(0, 10)+"</td><td>"+p.fin_validez.substr(0, 10)+"</td><td>"+p.duracion+"</td>";
                            data+='<td><button class="btn btn-primary" onclick="modificar(' + p.id + ')" type="button">Modificar</button>';
                            data+='<button class="btn btn-danger" onclick="eliminar(' + p.id + ')" type="button">Eliminar</button></td></tr>';
                        }
