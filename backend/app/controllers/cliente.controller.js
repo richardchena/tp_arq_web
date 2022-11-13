@@ -110,7 +110,7 @@ exports.get_id = (req, res) => {
     const cedula = req.params.id;;
     Clientes.findAll(
         { where: {doc_nro: cedula},
-          attributes: ['id']
+          attributes: ['id','nombre','apellido']
         })
         .then(data => {
             if(data.length === 0){

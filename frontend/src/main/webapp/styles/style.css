@@ -36,6 +36,7 @@ h3{
     text-align: center;
 }
 
+
 select{
     width: 12em;
 }
@@ -48,7 +49,9 @@ label {
 }
 input {
     display: inline-block;
+    text-align: left;
     width: 12em;
+    vertical-align: bottom;
 }
 
 
@@ -85,4 +88,36 @@ input[type=radio]{
 
 .btn-success:focus{
     box-shadow: 0 0 0 4px rgb(255,208,165)!important;
+}
+
+.boton{
+    background-color: #FF6700 !important;
+    border-color: #FF6700 !important;
+}
+
+.boton:hover{
+    background-color: #EF6C00 !important;
+}
+
+.boton:focus{
+    box-shadow: 0 0 0 4px rgb(255,208,165)!important;
+}
+
+.input_cedula {
+    display: inline-block;
+    text-align: left;
+    width: 18em;
+    vertical-align: bottom;
+}
+
+.monto{
+    text-align: left;
+    width: 10em;
+}
+
+.label_campo {
+    display: inline-block;
+    text-align: left;
+    width: 11em;
+    vertical-align: bottom;
 }

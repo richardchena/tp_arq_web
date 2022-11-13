@@ -76,42 +76,77 @@
             <div class="py-4 px-4 bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <form>
                     <div class="campo">
-                      <label for="cedula">Cedula del cliente</label>
-                      <input type="number" id="cedula">
+                      <input class="input_cedula" type="number" id="cedula" placeholder="Cedula del cliente">
+                      <button onclick="encontrarId();" class="boton text-white" type="button">Buscar</button>
                       <input type="number" id="id_cliente" type hidden>
+                    </div>
+                    <div class="campo">
+                        <label class="label_campo"> Cliente: </label>
+                        <label class="label_campo" id="nombre" ></label>
+                    </div>
+                    <div class="campo">
+                      <label class="label_campo"> Puntos disponibles: </label>
+                      <label class="label_campo" id="puntos" ></label>
                     </div>
 
                     <div class="campo">
-                      <label for="montoperacion">Monto de la operacion</label>
-                      <input type="number" id="monto">
+                      <label  for="montoperacion">Monto de la operacion</label>
+                      <input class="monto" type="number" id="monto">
                     </div>
                     <br>
                     <div class="campo">
-                       <button onclick="cargarPuntos();" class="btn btn-success text-white" type="button">Cargar puntos</button>
+                       <button onclick="obtenerPuntos();" class="btn btn-success text-white" type="button">Cargar puntos</button>
                     </div>
                 </form>   
             </div>
         </div>
         <script>
-            function cargarPuntos(){
-                var cedula = $('#cedula').val();
-                encontrarId(cedula);
-
+            
+            function cargarInfo(cliente, saldo){
+                var id_cliente = cliente[0].id; 
+                id = document.getElementById('id_cliente');
+                id.value = id_cliente;
+                document.getElementById('nombre').innerHTML = cliente[0].nombre + ' ' +cliente[0].apellido;
+                document.getElementById('puntos').innerHTML = saldo + ' puntos';
             }
             
-            function encontrarId(cedula) {
+            function encontrarId() {
+                var cedula = $('#cedula').val();
                 $.ajax({
                     url:"http://localhost:9090/api/v1/cliente/cedula/"+cedula,
                     dataType:"json",
                     success:function(res){
                         var id_cliente = res[0].id;  
-                        id = document.getElementById('id_cliente');
-                        id.value = id_cliente;
-                        obtenerPuntos();
-                                      
+                        verificarSaldo(id_cliente, 0, res);
+                     
                     },
                     error:function(res) {
                          let mess = JSON.parse(res.responseText);
+                        //EL BACKEND RETORNA UN MENSAJE Y ESO OBTENGO
+                        swal(
+                            mess.message.toUpperCase(), 
+                            {
+                                dangerMode: true,
+                                buttons: true
+                            }
+                        ).then(okay => { 
+                            if (okay) {
+                                window.location.reload();
+                            }
+                        });
+                    }
+                });
+            }
+            
+            function verificarSaldo(id_cliente, monto, data) {
+                $.ajax({
+                    url:"http://localhost:9090/api/v1/bolsa/saldo/"+id_cliente+"/"+monto,
+                    dataType:"json",
+                    success:function(res){
+                        cargarInfo(data, res);                               
+                    },
+                    error:function(res) {
+                        let mess = JSON.parse(res.responseText);
                         //EL BACKEND RETORNA UN MENSAJE Y ESO OBTENGO
                         swal(
                             mess.message.toUpperCase(), 

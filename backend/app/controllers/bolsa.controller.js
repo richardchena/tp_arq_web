@@ -142,7 +142,7 @@ exports.get_bolsas = (req, res) => {
         })
         .catch(err => {
             res.status(500).send({
-                message: err.message || "Ocurrio un error al obtener los parametros."
+                message: err.message || "Ocurrio un error"
         });
     });
 };

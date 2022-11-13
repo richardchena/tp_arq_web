@@ -76,21 +76,29 @@
             <div class="py-4 px-4 bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <form>
                     <div class="campo">
-                      <label for="cedula">Cedula del cliente</label>
-                      <input type="number" id="cedula">
+                      <input class="input_cedula" type="number" id="cedula" placeholder="Cedula del cliente">
+                      <button onclick="encontrarId();" class="boton text-white" type="button">Buscar</button>
                       <input type="number" id="id_cliente" type hidden>
                     </div>
                     <div class="campo">
-                      <label  for="inputState">Concepto</label>
-                      <select id="selector"> 
+                        <label class="label_campo"> Cliente: </label>
+                        <label class="label_campo" id="nombre" ></label>
+                    </div>
+                    <div class="campo">
+                      <label class="label_campo"> Puntos disponibles: </label>
+                      <label class="label_campo" id="puntos" ></label>
+                    </div>
+                    <div class="campo">
+                      <label  class="label_campo" for="inputState">Concepto</label>
+                      <select class="label_campo" id="selector"> 
                           <option value=0 selected>Seleccionar</option>
                       </select>
                     </div>
                     <br>
                     <div class="campo">
-                       <button onclick="utilizarPuntos();" class="btn btn-success text-white" type="button">Utilizar puntos</button>
+                        <button onclick="utilizarPuntos();" class="btn btn-success text-white" id="boton" type="button" disabled="true">Utilizar puntos</button>
                     </div>
-                </form> 
+                </form>
             </div>
         </div>
             <script>
@@ -110,6 +118,15 @@
                 });
             });
             
+            $('#selector').on("change",function(){
+                var monto = $('#selector').val();
+                if (monto > 0){
+                    $('#boton').prop('disabled', false);
+                }else{
+                    $('#boton').prop('disabled', true);
+                }
+                });
+            
             $(document).ready(function(){
                 añadirOpciones();
             });
@@ -121,7 +138,7 @@
                     success:function(res){
                         var len = res.length;
                         for( var i = 0; i<len; i++){
-                            $("#selector").append('<option value="'+res[i].puntos+'">'+res[i].descripcion+'</option>');
+                            $("#selector").append('<option value="'+res[i].puntos+'">'+res[i].descripcion+' ('+res[i].puntos+' puntos)'+'</option>');
                         }                
                     },
                     error:function() {
@@ -131,20 +148,21 @@
             }
             
             function utilizarPuntos(){
-                var cedula = $('#cedula').val();
-                encontrarId(cedula);
+                obtenerMonto();
 
             }
             
-            function encontrarId(cedula) {
+            function encontrarId() {
+                var cedula = $('#cedula').val();
                 $.ajax({
                     url:"http://localhost:9090/api/v1/cliente/cedula/"+cedula,
                     dataType:"json",
                     success:function(res){
                         var id_cliente = res[0].id;  
-                        id = document.getElementById('id_cliente');
-                        id.value = id_cliente;
-                        obtenerMonto();
+                        //id = document.getElementById('id_cliente');
+                        //id.value = id_cliente;
+                        //obtenerMonto();
+                        obtenerSaldo(id_cliente, 0, res);
                                       
                     },
                     error:function(res) {
@@ -163,6 +181,39 @@
                         });
                     }
                 });
+            }
+            
+            function obtenerSaldo(id_cliente, monto, data) {
+                $.ajax({
+                    url:"http://localhost:9090/api/v1/bolsa/saldo/"+id_cliente+"/"+monto,
+                    dataType:"json",
+                    success:function(res){
+                        cargarInfo(data, res);                               
+                    },
+                    error:function(res) {
+                        let mess = JSON.parse(res.responseText);
+                        //EL BACKEND RETORNA UN MENSAJE Y ESO OBTENGO
+                        swal(
+                            mess.message.toUpperCase(), 
+                            {
+                                dangerMode: true,
+                                buttons: true
+                            }
+                        ).then(okay => { 
+                            if (okay) {
+                                window.location.reload();
+                            }
+                        });
+                    }
+                });
+            }
+            
+            function cargarInfo(cliente, saldo){
+                var id_cliente = cliente[0].id; 
+                id = document.getElementById('id_cliente');
+                id.value = id_cliente;
+                document.getElementById('nombre').innerHTML = cliente[0].nombre + ' ' +cliente[0].apellido;
+                document.getElementById('puntos').innerHTML = saldo + ' puntos';
             }
             
             function obtenerMonto() {
@@ -219,6 +270,14 @@
                     dataType:"json",
                     data: bolsas,
                     success:function(data){
+                        swal({
+                          text: "¡Se ha utilizado correctamente los puntos!",
+                          icon: "success"
+                        }).then(okay => { 
+                            if (okay) {
+                                window.location.reload();
+                            }
+                        });   
                          crearCabecera();
                                       
                     },
@@ -239,14 +298,7 @@
                     dataType:"json",
                     data: cabecera,
                     success:function(data){
-                        swal({
-                          text: "¡Se ha utilizado correctamente los puntos!",
-                          icon: "success"
-                        }).then(okay => { 
-                            if (okay) {
-                                window.location.reload();
-                            }
-                        });                         
+                                              
                     },
                     error:function() {
                         $alert("error occured");
@@ -255,9 +307,11 @@
             }
             
             function obtenerDatosCabecera(){
+                let cadena = $('#selector option:selected').text().toString();
+                let indice = cadena.indexOf(" (");
                 var monto = $('#selector').val();
                 var id_cliente = $('#id_cliente').val();
-                var concepto = $('#selector option:selected').text().toString();
+                var concepto = cadena.substr(0, indice);
                 var fecha = Date();
                 let cabecera = {
                     id_cliente: id_cliente,
