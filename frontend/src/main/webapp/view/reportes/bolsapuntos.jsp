@@ -19,7 +19,7 @@
         </style>
         <title>Clientes</title>
     </head>
-    <body onload="fetch();">
+    <body>
         <nav class="navbar navbar-expand-lg navbar-dark tp-color">
           <a class="navbar-brand" href="/tp_arq_web">
             <img src="/tp_arq_web/img/logo.png" width="30" height="30" class="d-inline-block tp-color alejar" alt="">
@@ -77,16 +77,17 @@
                 <table class="table table-bordered text-center">
                     
                     <div class="consulta">
-                      <label for="nombre">Ingrese cliente o rango de puntos
-                      <input type="text" id="nombre" required></label>
-                      <button id="boton" class="btn btn-success text-white" type="button">Consultar</button>
+                      <input style="width: 260px" type="number" id="nro" placeholder="Ingrese nro. documento" required></label>
+                      <button style="margin-left: 10px" onclick="validar()" id="boton" class="btn btn-success text-white" type="button">Consultar</button>
                     </div>
+                    
+                    <br>
                     
                     <thead>
                         <tr>
-                            <th>#</th>
-                            <th>#</th>
-                            <Th>#</Th>                             
+                            <th>Nro. documento</th>
+                            <th>Nombre Cliente</th>
+                            <Th>Saldo Puntos</Th>                             
                         </tr>
                     </thead>
                     <tbody id="content"></tbody>
@@ -94,33 +95,45 @@
              </div>
         </div>
         <script>
-            
-            function fetch() {
-                const nombre = document.querySelector('#nombre');
-                const boton = document.querySelector('#boton');
-                const filtrar = () =>{
-                    const campo = nombre.value.toLowerCase();
-                    $.ajax({
-                        url:"http://localhost:9090/api/v1/cabecera",
-                        dataType:"json",
-                        success:function(res){
-                           var data="";
-                           for(i=0;i<res.length;i++){
-                               let p = res[i];
-                               if(p.concepto === campo || p.fecha === campo || p.id_cliente === campo){
-                                    data+="<tr id="+ p.concepto + "><td>"+p.fecha+"</td><td>"+p.id_cliente+"</td></tr>";
-                                }
-                            }
-                           $('#status').html("Status : Content fetched");
-                           $('#content').html(data);
-                        },
-                        error:function() {
-                            swal("Ocurrio un error");
-                        }
-                    });
-                };     
-                boton.addEventListener('click', filtrar); 
+            function validar() {
+                const nro = document.getElementById("nro").value;
+                
+                if(nro.length === 0) {
+                    swal('El campo no puede estar vacío');
+                } else {
+                    cargar();
+                }
             }
+            
+            
+            function cargar() {
+                const nro = document.getElementById("nro").value;
+                $.ajax({
+                    url:"http://localhost:9090/api/v1/cabecera/saldo",
+                    dataType:"json",
+                    success:function(res){
+                       var data="";
+                       let cont = 0;
+                       for(i=0;i<res.length;i++){
+                           let p = res[i];
+                           if(nro === p.doc_nro){
+                               cont = 1;
+                               data+="<tr id="+ p.doc_nro + "><td>"+p.doc_nro+"</td><td>"+p.nombre_cliente+"</td><td>"+p.total_puntos+"</td></tr>";
+                           }
+                       }
+                       
+                       if (cont === 0){
+                           swal("", "No hay registros", "error");
+                       }
+                                                
+                       $('#status').html("Status : Content fetched");
+                       $('#content').html(data);
+                    },
+                    error:function() {
+                        swal("Ocurrio un error");
+                    }
+                });
+            };
                         
         </script>
     </body>

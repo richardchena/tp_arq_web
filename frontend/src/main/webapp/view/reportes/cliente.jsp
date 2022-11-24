@@ -144,6 +144,11 @@
                            data+="<tr id="+ p.id + "><td>"+p.id+"</td><td>"+p.nombre+"</td><td>"+p.doc_nro+"</td><td>"+p.email+"</td><td>"+p.nacionalidad+"</td><td>"+p.fec_nac+"</td></tr>";
                         }
                        $('#content').html(data);
+                       
+                       if (res.length === 0){
+                           swal("", "No hay registros", "error");
+                       }
+                       
                     },
                     error:function() {
                         swal("Ocurrio un error");

@@ -112,3 +112,16 @@ exports.ejecutar = (req, res) => {
             });
         });
 }
+
+//GET REPORTE TT PUNTOS
+exports.saldo = (req, res) => {
+    db.sequelize.query(`SELECT b.doc_nro, b.nombre || ' ' || b.apellido as nombre_cliente, sum(a.saldo_puntos) as total_puntos FROM public."TP_ARQ_BOLSAs" a INNER JOIN public."TP_ARQ_CLIENTEs" b on b.ID = a.id_cliente WHERE caducidad_puntaje >= current_date GROUP BY b.doc_nro, b.nombre || ' ' || b.apellido`)
+        .then(data => {
+            res.send(data[0]);
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: err.message
+            });
+        });
+}

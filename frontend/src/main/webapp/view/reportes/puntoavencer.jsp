@@ -78,7 +78,7 @@
                     
                     <div class="consulta">
                       <input style="width: 260px" type="number" id="dias" required placeholder="Ingrese una cantidad de días"></label>
-                      <button style="margin-left: 10px" onclick="mostrar()" id="boton" class="btn btn-success text-white" type="button">Consultar</button>
+                      <button style="margin-left: 10px" onclick="validar()" id="boton" class="btn btn-success text-white" type="button">Consultar</button>
                     </div>
                     
                     <br>
@@ -98,6 +98,16 @@
              </div>
         </div>
         <script>
+            function validar() {
+                const dias = document.getElementById("dias").value;
+                
+                if(dias.length === 0) {
+                    swal('El campo no puede estar vacío');
+                } else {
+                    mostrar();
+                }
+            }
+            
             function mostrar() {
                 const dias = document.getElementById("dias").value;
                 
