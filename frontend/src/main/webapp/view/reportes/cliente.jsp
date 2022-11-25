@@ -20,7 +20,7 @@
         
         <title>Clientes</title>
     </head>
-    <body onload="fetch();">
+    <body>
         <nav class="navbar navbar-expand-lg navbar-dark tp-color">
           <a class="navbar-brand" href="/tp_arq_web">
             <img src="/tp_arq_web/img/logo.png" width="30" height="30" class="d-inline-block tp-color alejar" alt="">
@@ -78,11 +78,16 @@
                 <table class="table table-bordered text-center">
                     
                     <div class="consulta">
-                      <label for="nombre">Nombre
-                      <input type="text" id="nombre" required></label>
-                      <button id="boton" class="btn btn-success text-white" type="button">Consultar</button>
+                      <input style="width: 250px" type="text" placeholder="Ingrese aquí para filtrar" id="valor_" required></label>
+                      <select style="margin-left: 10px" id="categoria" onchange="dinamico(this)">
+                        <option value="1" selected>Nombre</option>
+                        <option value="2">Apellido</option>
+                        <option value="3">Cumpleaños</option>
+                      </select>
+                      <button onclick="validar()" style="margin-left: 10px" id="boton" class="btn btn-success text-white" type="button">Buscar</button>
                     </div>
                    
+                    <br>
                     
                     <thead>
                         <tr>
@@ -91,7 +96,7 @@
                             <Th>Cedula</Th> 
                             <Th>Correo</Th> 
                             <Th>Nacionalidad</Th>
-                            <th>Telefono</th>                          
+                            <th>Fecha nacimiento</th>
                         </tr>
                     </thead>
                     <tbody id="content"></tbody>
@@ -99,37 +104,57 @@
              </div>
         </div>
         <script>
-            
-            
-            function fetch() {
-                const nombre = document.querySelector('#nombre');
-                const boton = document.querySelector('#boton');
-                const filtrar = () =>{
-                    const campo = nombre.value.toLowerCase();
-                    $.ajax({
-                        url:"http://localhost:9090/api/v1/cliente",
-                        dataType:"json",
-                        success:function(res){
-                           var data="";
-                           for(i=0;i<res.length;i++){
-                               let p = res[i];
-                                                              
-                               if(p.nombre === campo || p.apellido === campo || p.fec_nac === campo){
-                                    data+="<tr id="+ p.id + "><td>"+p.id+"</td><td>"+p.nombre+"</td><td>"+p.doc_nro+"</td><td>"+p.email+"</td><td>"+p.nacionalidad+"</td><td>"+p.telefono+"</td></tr>";
-                                }
-                            }
-                           $('#status').html("Status : Content fetched");
-                           $('#content').html(data);
-                        },
-                        error:function() {
-                            swal("Ocurrio un error");
-                        }
-                    });
-                };     
-                boton.addEventListener('click', filtrar); 
+            function dinamico(sel)
+            {
+                if(sel.value === '3') {
+                    document.getElementById("valor_").type = 'date';
+                } else {
+                    document.getElementById("valor_").type = 'text';
+                }
             }
-                        
-                        
+            
+            function validar () {
+                if (document.getElementById("valor_").value === '') {
+                    swal('El campo no puede estar vacío');
+                } else {
+                    cargar();
+                }
+            }
+
+            function cargar() {
+                const valor = document.getElementById("valor_").value;
+                const seleccion = document.getElementById("categoria").value;
+                let url_valido = '';
+                
+                if (seleccion === '1') {
+                    url_valido = 'http://localhost:9090/api/v1/cliente/aprox?nombre=';
+                } else if (seleccion === '2') {
+                    url_valido = 'http://localhost:9090/api/v1/cliente/aprox?apellido='
+                } else {
+                    url_valido = 'http://localhost:9090/api/v1/cliente/aprox?fec_nac='
+                }
+                
+                $.ajax({
+                    type: 'GET',
+                    url: url_valido + valor + "",
+                    success:function(res){
+                       var data="";
+                       for(i=0;i<res.length;i++){
+                           let p = res[i];
+                           data+="<tr id="+ p.id + "><td>"+p.id+"</td><td>"+p.nombre+"</td><td>"+p.doc_nro+"</td><td>"+p.email+"</td><td>"+p.nacionalidad+"</td><td>"+p.fec_nac+"</td></tr>";
+                        }
+                       $('#content').html(data);
+                       
+                       if (res.length === 0){
+                           swal("", "No hay registros", "error");
+                       }
+                       
+                    },
+                    error:function() {
+                        swal("Ocurrio un error");
+                    }
+                });  
+            }       
         </script>
     </body>
 </html>

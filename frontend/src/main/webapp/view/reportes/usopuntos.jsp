@@ -16,10 +16,14 @@
             .btn-primary{
                 margin-right: 5px;
             }
+            
+            input {
+                margin-left: 10px;
+            }
         </style>
         <title>Clientes</title>
     </head>
-    <body onload="fetch();">
+    <body>
         <nav class="navbar navbar-expand-lg navbar-dark tp-color">
           <a class="navbar-brand" href="/tp_arq_web">
             <img src="/tp_arq_web/img/logo.png" width="30" height="30" class="d-inline-block tp-color alejar" alt="">
@@ -77,16 +81,31 @@
                 <table class="table table-bordered text-center">
                     
                     <div class="consulta">
-                      <label for="nombre">Ingrese concepto, fecha o cliente
-                      <input type="text" id="nombre" required></label>
-                      <button id="boton" class="btn btn-success text-white" type="button">Consultar</button>
+                      <select style="margin-left: 10px" id="concepto" >
+                      </select>
+                        
+                      <input style="display:none" type="date" id="fecha">
+                      
+                      <input style="display:none" type="number" id="doc" placeholder="Ingrese nro. doc.">
+                      
+                      <select style="margin-left: 10px" id="categoria" onchange="dinamico(this)">
+                        <option value="1" selected>Concepto</option>
+                        <option value="2">Fecha</option>
+                        <option value="3">Doc cliente</option>
+                      </select>
+                      <button style="margin-left: 10px" id="boton" class="btn btn-success text-white" type="button" onclick="validar()">Consultar</button>
                     </div>
+                    
+                    <br>
                     
                     <thead>
                         <tr>
-                            <th>Concepto de uso</th>
+                            <th>ID</th>
+                            <th>Nombre cliente</th>
+                            <th>Doc. cliente</th>
                             <th>Fecha de uso</th>
-                            <Th>Cliente</Th>                             
+                            <th>Concepto de uso</th>
+                            <th>Puntaje utilizado</th>
                         </tr>
                     </thead>
                     <tbody id="content"></tbody>
@@ -94,32 +113,107 @@
              </div>
         </div>
         <script>
+            function dinamico(sel) {
+                if(sel.value === '1') {
+                    document.getElementById("concepto").style.display = "revert";
+                    document.getElementById("fecha").style.display = "none";
+                    document.getElementById("doc").style.display = "none";
+                    
+                } else if (sel.value === '2'){
+                    document.getElementById("concepto").style.display = "none";
+                    document.getElementById("fecha").style.display = "revert";
+                    document.getElementById("doc").style.display = "none";
+                } else {
+                    document.getElementById("concepto").style.display = "none";
+                    document.getElementById("fecha").style.display = "none";
+                    document.getElementById("doc").style.display = "revert";
+                }
+            }
             
-            function fetch() {
-                const nombre = document.querySelector('#nombre');
-                const boton = document.querySelector('#boton');
-                const filtrar = () =>{
-                    const campo = nombre.value.toLowerCase();
-                    $.ajax({
-                        url:"http://localhost:9090/api/v1/cabecera",
-                        dataType:"json",
-                        success:function(res){
-                           var data="";
-                           for(i=0;i<res.length;i++){
-                               let p = res[i];
-                               if(p.concepto === campo || p.fecha === campo || p.id_cliente === campo){
-                                    data+="<tr id="+ p.id + "><td>"+p.concepto+"</td><td>"+p.fecha.substr(0, 10)+"</td><td>"+p.id_cliente+"</td></tr>";
-                                }
-                            }
-                           $('#status').html("Status : Content fetched");
-                           $('#content').html(data);
-                        },
-                        error:function() {
-                            swal("Ocurrio un error");
+            
+            $(document).ready(function(){
+                añadirOpciones();
+            });
+            
+            function añadirOpciones() {
+                $.ajax({
+                    url:"http://localhost:9090/api/v1/conceptos/",
+                    dataType:"json",
+                    success:function(res){
+                        var len = res.length;
+                        for( var i = 0; i<len; i++){
+                            $("#concepto").append('<option value="'+res[i].descripcion+'">'+res[i].descripcion+'</option>');
+                        }                
+                    },
+                    error:function() {
+                        $alert("error occured");
+                    }
+                });
+            }
+            
+            function validar(){
+                const opc = document.getElementById("categoria").value;
+                const fec = document.getElementById("doc").value;
+                
+                if (opc === '2' && document.getElementById("fecha").value !== ''){
+                    cargar();
+                    
+                } else if (opc === '3' && document.getElementById("doc").value !== ''){
+                    cargar();
+                    
+                } else if (opc === '1'){
+                    cargar();
+                    
+                } else {
+                    swal('', 'Debe ingresar un dato para consultar', 'error');
+                }
+            }
+            
+            function cargar() {
+                const opc = document.getElementById("categoria").value;
+                let bandera = 0;
+
+                $.ajax({
+                    url:"http://localhost:9090/api/v1/cabecera/ejecutar",
+                    dataType:"json",
+                    success:function(res){
+                        var data="";
+                        for(i=0;i<res.length;i++){
+                             let p = res[i];
+
+                             if(opc === '1'){
+                                 const campo = document.getElementById("concepto").value;
+                                 if(p.concepto === campo){
+                                      bandera = 1;
+                                      data+="<tr id="+ p.id + "><td>"+p.id+"</td><td>"+p.nombre+"</td><td>"+p.doc_nro+"</td><td>"+p.fecha.substr(0, 10)+"</td><td>"+p.concepto+"</td><td>"+p.puntaje_utilizado+"</td></tr>";
+                                 }
+                             } else if (opc === '2') {
+                                 const campo = document.getElementById("fecha").value;
+                                 if(p.fecha.substr(0, 10) === campo){
+                                      bandera = 1;
+                                      data+="<tr id="+ p.id + "><td>"+p.id+"</td><td>"+p.nombre+"</td><td>"+p.doc_nro+"</td><td>"+p.fecha.substr(0, 10)+"</td><td>"+p.concepto+"</td><td>"+p.puntaje_utilizado+"</td></tr>";
+                                 }
+                             } else {
+                                 const campo = document.getElementById("doc").value;
+                                 if(p.doc_nro === campo){
+                                      bandera = 1;
+                                      data+="<tr id="+ p.id + "><td>"+p.id+"</td><td>"+p.nombre+"</td><td>"+p.doc_nro+"</td><td>"+p.fecha.substr(0, 10)+"</td><td>"+p.concepto+"</td><td>"+p.puntaje_utilizado+"</td></tr>";
+                                 }
+                             }
                         }
-                    });
-                };     
-                boton.addEventListener('click', filtrar); 
+
+                        if (bandera !== 1){
+                            swal("", "No hay registros", "error");
+                        }
+                        
+                        $('#status').html("Status : Content fetched");
+                        $('#content').html(data);
+
+                    },
+                    error:function() {
+                        swal("Ocurrio un error");
+                    }
+                });
             }
                         
         </script>

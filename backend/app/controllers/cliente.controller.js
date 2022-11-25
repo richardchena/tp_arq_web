@@ -61,6 +61,38 @@ exports.findAll = (req, res) => {
     });
 };
 
+//Aproximacion
+exports.aprox = (req, res) => {
+    const nombre = "'" + req.query.nombre + "%'";
+    const apellido = "'" + req.query.apellido + "%'";
+    const fec_nac = "'" + req.query.fec_nac + "'";
+
+    let query = '';
+
+    if (req.query.fec_nac === undefined) {
+        query = `select id, nombre || ' ' || apellido as nombre, doc_nro, email, nacionalidad, date(fec_nac) as fec_nac
+        from public."TP_ARQ_CLIENTEs" 
+        where trim(lower(nombre)) like trim(lower(${nombre})) or
+              trim(lower(apellido)) like trim(lower(${apellido}))`
+    } else {
+        query = `select id, nombre || ' ' || apellido as nombre, doc_nro, email, nacionalidad, date(fec_nac) as fec_nac
+        from public."TP_ARQ_CLIENTEs" 
+        where trim(lower(nombre)) like trim(lower(${nombre})) or
+              trim(lower(apellido)) like trim(lower(${apellido})) or
+              DATE(fec_nac) = ${fec_nac}`
+    }
+
+    db.sequelize.query(query)
+        .then(data => {
+            res.send(data[0]);
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: err.message || "Ocurrio un error al obtener las ventas."
+        });
+    });
+};
+
 
 
 //DELETE

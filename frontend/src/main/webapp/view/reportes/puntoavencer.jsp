@@ -77,10 +77,11 @@
                 <table class="table table-bordered text-center">
                     
                     <div class="consulta">
-                      <label for="nombre">Ingrese dia
-                      <input type="text" id="dias" required></label>
-                      <button onclick="mostrar()" id="boton" class="btn btn-success text-white" type="button">Consultar</button>
+                      <input style="width: 260px" type="number" id="dias" required placeholder="Ingrese una cantidad de días"></label>
+                      <button style="margin-left: 10px" onclick="validar()" id="boton" class="btn btn-success text-white" type="button">Consultar</button>
                     </div>
+                    
+                    <br>
                     
                     <thead>
                         <tr>
@@ -89,6 +90,7 @@
                             <Th>Nro. documento</Th>
                             <th>Saldo puntos</th>
                             <th>Vencimiento</th>
+                            <th>Días restantes</th>
                         </tr>
                     </thead>
                     <tbody id="content"></tbody>
@@ -96,6 +98,16 @@
              </div>
         </div>
         <script>
+            function validar() {
+                const dias = document.getElementById("dias").value;
+                
+                if(dias.length === 0) {
+                    swal('El campo no puede estar vacío');
+                } else {
+                    mostrar();
+                }
+            }
+            
             function mostrar() {
                 const dias = document.getElementById("dias").value;
                 
@@ -107,13 +119,13 @@
                        var data="";
                        for(i=0;i<res.length;i++){
                            let p = res[i];
-                              data+="<tr id="+ p.id_cliente + "><td>"+p.id_cliente+"</td><td>"+p.nombre+"</td><td>"+p.doc_nro+"</td><td>"+p.saldo_puntos+"</td><td>"+p.vencimiento+"</td></tr>";
+                              data+="<tr id="+ p.id_cliente + "><td>"+p.id_cliente+"</td><td>"+p.nombre+"</td><td>"+p.doc_nro+"</td><td>"+p.saldo_puntos+"</td><td>"+p.vencimiento+"</td><td>"+p.cant+"</td></tr>";
                         }
                        $('#status').html("Status : Content fetched");
                        $('#content').html(data);
                     },
                     error:function() {
-                        swal("Ocurrio un error");
+                        swal('ERROR');
                     }
                 }); 
             }

@@ -6,6 +6,8 @@ module.exports = app => {
     router.post("/", cabecera.create);
 
     //Obtener
+    router.get("/ejecutar/", cabecera.ejecutar);
+    router.get("/saldo/", cabecera.saldo);
     router.get("/", cabecera.findAll);
     router.get("/:id", cabecera.findOne);
 

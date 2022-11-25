@@ -100,3 +100,28 @@ exports.update = (req, res) => {
         });
 };
 
+//GET REPORTE USO DE PUNTOS
+exports.ejecutar = (req, res) => {
+    db.sequelize.query(`SELECT a.id, b.nombre || ' ' || b.apellido as nombre, b.doc_nro, a.fecha, a.concepto, a.puntaje_utilizado FROM public."TP_ARQ_CABECERAs" a INNER JOIN public."TP_ARQ_CLIENTEs" b on b.id = a.id_cliente`)
+        .then(data => {
+            res.send(data[0]);
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: err.message
+            });
+        });
+}
+
+//GET REPORTE TT PUNTOS
+exports.saldo = (req, res) => {
+    db.sequelize.query(`SELECT b.doc_nro, b.nombre || ' ' || b.apellido as nombre_cliente, sum(a.saldo_puntos) as total_puntos FROM public."TP_ARQ_BOLSAs" a INNER JOIN public."TP_ARQ_CLIENTEs" b on b.ID = a.id_cliente WHERE caducidad_puntaje >= current_date GROUP BY b.doc_nro, b.nombre || ' ' || b.apellido`)
+        .then(data => {
+            res.send(data[0]);
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: err.message
+            });
+        });
+}

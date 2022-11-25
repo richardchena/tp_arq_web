@@ -6,6 +6,7 @@ module.exports = app => {
     router.post("/", cliente.create);
 
     //Obtener
+    router.get("/aprox/", cliente.aprox);
     router.get("/", cliente.findAll);
     router.get("/:id", cliente.findOne);
 
