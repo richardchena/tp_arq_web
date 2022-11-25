@@ -118,14 +118,41 @@
                 });
             });
             
+            $('#cedula').on("keyup",function(){
+                var cedula = $('#cedula').val();
+                if (cedula === ""){
+                    $('#boton').prop('disabled', true);
+                }else if(verificarConcepto()){
+                    $('#boton').prop('disabled', false);
+                }
+                });
+                
+            function verificarConcepto(){
+                concepto = document.getElementById('selector').value;
+                if (concepto > 0){
+                    return true;
+                }
+                return false;
+            }
+                
             $('#selector').on("change",function(){
                 var monto = $('#selector').val();
                 if (monto > 0){
-                    $('#boton').prop('disabled', false);
+                    if(verificarCedula()){
+                        $('#boton').prop('disabled', false);
+                    } 
                 }else{
                     $('#boton').prop('disabled', true);
                 }
                 });
+                
+            function verificarCedula(){
+                id = document.getElementById('cedula').value;
+                if (id === ""){
+                    return false;
+                }
+                return true;
+            }
             
             $(document).ready(function(){
                 añadirOpciones();

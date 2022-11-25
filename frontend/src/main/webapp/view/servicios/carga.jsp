@@ -95,12 +95,47 @@
                     </div>
                     <br>
                     <div class="campo">
-                       <button onclick="obtenerPuntos();" class="btn btn-success text-white" type="button">Cargar puntos</button>
+                       <button onclick="obtenerPuntos();" class="btn btn-success text-white" id="boton" type="button" disabled="true">Cargar puntos</button>
                     </div>
                 </form>   
             </div>
         </div>
         <script>
+            $('#cedula').on("keyup",function(){
+                var cedula = $('#cedula').val();
+                if (cedula === ""){
+                    $('#boton').prop('disabled', true);
+                }else if(verificarMonto()){
+                    $('#boton').prop('disabled', false);
+                }
+                });
+                
+            function verificarMonto(){
+                monto = document.getElementById('monto').value;
+                if (monto > 0){
+                    return true;
+                }
+                return false;
+            }
+                
+            $('#monto').on("keyup",function(){
+                var monto = $('#monto').val();
+                if (monto > 0){
+                    if(verificarCedula()){
+                        $('#boton').prop('disabled', false);
+                    } 
+                }else{
+                    $('#boton').prop('disabled', true);
+                }
+                });
+                
+            function verificarCedula(){
+                id = document.getElementById('cedula').value;
+                if (id === ""){
+                    return false;
+                }
+                return true;
+            }
             
             function cargarInfo(cliente, saldo){
                 var id_cliente = cliente[0].id; 
