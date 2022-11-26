@@ -33,6 +33,7 @@ require("./app/routes/conceptos.routes")(app);
 require("./app/routes/reglas.routes")(app);
 require("./app/routes/cabecera.routes")(app);
 require("./app/routes/mailer.routes")(app);
+require("./app/routes/google.routes")(app);
 
 app.listen(PORT, () => {
     console.log('Servidor corriendo en puerto 9090.');
