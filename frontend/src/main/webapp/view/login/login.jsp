@@ -64,8 +64,8 @@
                 success:function(res){
                     mostrar_ventana(res.message);
                 },
-                error:function(err) {
-                    swal(err);
+                error:function() {
+                    swal("", "Verifica la conexión", "error");
                 }
             });
         }
