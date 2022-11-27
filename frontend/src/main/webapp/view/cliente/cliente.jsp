@@ -73,6 +73,9 @@
               <li class="nav-item">
                 <a class="nav-link text-white" href="/tp_arq_web/view/actualizacion/actualizacion.jsp">Actualización</a>
               </li>
+              <li class="nav-item">
+                <a class="nav-link text-white" href="/tp_arq_web/view/sorteos/sorteo.jsp">Sorteo</a>
+              </li>
             </ul>
           </div>
         </nav>  

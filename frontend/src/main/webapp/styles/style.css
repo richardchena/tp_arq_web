@@ -121,3 +121,20 @@ input[type=radio]{
     width: 11em;
     vertical-align: bottom;
 }
+
+.sorteo{
+  background-color: navajowhite;
+  padding-bottom: 15px;
+  height: 100px;
+  text-align: center;
+  margin-left: 36%;
+  margin-right: 36%;
+}
+
+.sorteo-disabled{
+    
+}
+
+.label_sorteo {
+  text-align: center;
+}

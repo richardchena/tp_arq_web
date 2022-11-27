@@ -1,3 +1,8 @@
+<%-- 
+    Document   : sorteo
+    Created on : 22 sept. 2022, 16:47:55
+    Author     : Admin
+--%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -12,12 +17,7 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
         <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
         <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
-        <style>
-            .btn-primary{
-                margin-right: 5px;
-            }
-        </style>
-        <title>Clientes</title>
+        <title>Sortear</title>
     </head>
     <body>
         <nav class="navbar navbar-expand-lg navbar-dark tp-color">
@@ -33,7 +33,7 @@
           <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav">
               <li class="nav-item">
-                <a class="nav-link text-muted" href="/tp_arq_web/view/cliente/cliente.jsp">Clientes</a>
+                <a class="nav-link text-white" href="/tp_arq_web/view/cliente/cliente.jsp">Clientes</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link text-white" href="/tp_arq_web/view/concepto/listar.jsp">Conceptos</a>
@@ -69,72 +69,80 @@
                 <a class="nav-link text-white" href="/tp_arq_web/view/actualizacion/actualizacion.jsp">Actualización</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link text-white" href="/tp_arq_web/view/sorteos/sorteo.jsp">Sorteo</a>
+                <a class="nav-link text-muted" href="/tp_arq_web/view/sorteos/sorteo.jsp">Sorteo</a>
               </li>
             </ul>
           </div>
-        </nav>  
-
+        </nav>
+        <h3>Sortear Premios </h3>
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="py-4 px-4 bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <table class="table table-bordered text-center">
-                    
-                    <div class="consulta">
-                      <input style="width: 260px" type="number" id="dias" required placeholder="Ingrese una cantidad de días"></label>
-                      <button style="margin-left: 10px" onclick="validar()" id="boton" class="btn btn-success text-white" type="button">Consultar</button>
+                <form>
+    
+                    <div class="campo">
+                        <label class="label_campo"> Premio: </label>
+                        <input class="label_campo" type="text" id="premio">
                     </div>
-                    
+                    <div class="campo">
+                      
+                        <label class="label_campo" for="inferior" >Puntos mínimos:</label>
+                        <input class="label_campo" id="minimo"  type="number" name="lim_inf" />
+                    </div>
+                    <div class="campo">
+                        <label class="label_campo" for="superior" >Puntos máximos:</label>
+                        <input class="label_campo" id="maximo"  type="number" name="lim_sup" />
+                    </div>
+
+                    <div class="campo">
+                      <label  class="label_campo" for="montoperacion">Fecha límite:</label>
+                      <input class="label_campo" type="date" id="fecha">
+                    </div>
                     <br>
-                    
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Nombre</th>
-                            <Th>Nro. documento</Th>
-                            <th>Saldo puntos</th>
-                            <th>Vencimiento</th>
-                            <th>Días restantes</th>
-                        </tr>
-                    </thead>
-                    <tbody id="content"></tbody>
-                </table>
-             </div>
+                    <div class="campo">
+                       <button onclick="sortear();" class="btn btn-success text-white" id="boton" type="button" >Sortear</button>
+                    </div>
+                    <div class="sorteo-disabled" id="sorteo">
+                      <label class="label_sorteo" id="ganadorx"></label>
+                      <label class="label_sorteo" id="nro_doc"></label>
+                      <label class="label_sorteo" id="texto"></label>
+                    </div>
+                </form>   
+            </div>
         </div>
         <script>
-            function validar() {
-                const dias = document.getElementById("dias").value;
-                
-                if(dias.length === 0) {
-                    swal('El campo no puede estar vacío');
-                } else {
-                    mostrar();
-                }
-            }
+
             
-            function mostrar() {
-                const dias = document.getElementById("dias").value;
+            function sortear(){
+                var premio = $('#premio').val();
+                var minimo = $('#minimo').val();
+                var maximo = $('#maximo').val();
+                var fecha = "'"+($('#fecha').val())+"'";
                 
                 $.ajax({
-                    url:"http://localhost:9090/api/v1/bolsa/dias/" + dias,
+                    type: 'GET',
+                    url:"http://localhost:9090/api/v1/cliente/ganadorx/"+premio+"/"+minimo+"/"+maximo+"/"+fecha,
                     dataType:"json",
-                    success:function(res2){
-                       let res = res2[0];
-                       var data="";
-                       for(i=0;i<res.length;i++){
-                           let p = res[i];
-                              data+="<tr id="+ p.id_cliente + "><td>"+p.id_cliente+"</td><td>"+p.nombre+"</td><td>"+p.doc_nro+"</td><td>"+p.saldo_puntos+"</td><td>"+p.vencimiento+"</td><td>"+p.cant+"</td></tr>";
-                        }
-                       $('#status').html("Status : Content fetched");
-                       $('#content').html(data);
+                    success:function(res){
+                        mostrarMensaje(res); 
                     },
-                    error:function() {
-                        swal('ERROR');
+                    error:function(err) {
+                        swal("Ocurrio un error: " + err);
                     }
-                }); 
+                });
             }
-                        
+            
+            function mostrarMensaje(res) {
+                $('#sorteo').addClass("sorteo");
+                if(res.nom_comp===""){
+                    document.getElementById('nro_doc').innerHTML = 'NO SE ENCONTRO UN/A GANADOR/A';
+                }else{
+                    document.getElementById('ganadorx').innerHTML = (res.nom_comp).toUpperCase();
+                    document.getElementById('nro_doc').innerHTML = 'N° DOCUMENTO: '+(res.cedula).toUpperCase();
+                    document.getElementById('texto').innerHTML = 'GANÓ UN/A '+ (res.premio).toUpperCase()+'!!';
+                }
+            }
+           
         </script>
+     
     </body>
 </html>
-
-

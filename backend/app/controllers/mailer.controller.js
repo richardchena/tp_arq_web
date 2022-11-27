@@ -4,7 +4,7 @@ exports.enviar_mail = (req, res) => {
     //const id = req.params.id;
     mail.transporter.sendMail({
         from: '"NO-REPLY" tparqweb@gmail.com>',
-        to: "alt.f3-2oilbiwo@yopmail.com", //koujekodoule-9411@yopmail.com
+        to: "johana.nunhez14@gmail.com", //koujekodoule-9411@yopmail.com
         subject: "INFO-TAREA",
         html: `
             <b>HOLA MUNDO</b>

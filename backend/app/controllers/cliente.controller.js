@@ -157,3 +157,39 @@ exports.get_id = (req, res) => {
         });
     });
 };
+
+exports.ejecutar = (req, res) => {
+    const premio =  req.params.premio;
+    const lim_inf = req.params.lim_inf;
+    const lim_sup = req.params.lim_sup;
+    const fecha_lim = req.params.fecha_lim;
+    db.sequelize.query('select prueba1('+ fecha_lim + ',' + lim_inf + ',' + lim_sup +')')
+        .then(data => {
+            const obj = cadenaObj(data[0][0].prueba1, premio);
+            res.send(obj);
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: err.message
+            });
+        });
+};
+
+function cadenaObj(data, premio) {
+    let cad = data.replace('(',"");
+    let cad2 = cad.replace(')',"");
+    let cad3 = cad2.replace('"',"");
+    let cad4 = cad3.replace('"',"");
+    let cad5 = cad4.split(',');
+    cad5.push(premio);
+    const obj = {
+        "id_cliente": cad5[0],
+        "nom_comp": cad5[1],
+        "cedula": cad5[2],
+        "correo": cad5[3],
+        "premio": cad5[4],
+    }
+
+    return obj;
+    
+}

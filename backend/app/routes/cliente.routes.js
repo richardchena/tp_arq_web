@@ -6,9 +6,11 @@ module.exports = app => {
     router.post("/", cliente.create);
 
     //Obtener
+    router.get("/ganadorx/:premio/:lim_inf/:lim_sup/:fecha_lim", cliente.ejecutar);
     router.get("/aprox/", cliente.aprox);
     router.get("/", cliente.findAll);
     router.get("/:id", cliente.findOne);
+    router.get("/cedula/:id", cliente.get_id);
 
     //Modificar
     router.put("/", cliente.update);
@@ -16,8 +18,10 @@ module.exports = app => {
     //Eliminar
     router.delete("/:id", cliente.destroy);
 
-    //Get ID
-    router.get("/cedula/:id", cliente.get_id);
+    
+    
+
+    
 
     //Se define la ruta de cliente
     app.use('/api/v1/cliente', router);
