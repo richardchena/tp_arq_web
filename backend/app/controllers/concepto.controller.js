@@ -1,3 +1,4 @@
+const { query } = require("express");
 const db = require("../models");
 const Conceptos = db.Conceptos;
 const Op = db.Sequelize.Op;
@@ -89,3 +90,19 @@ exports.update = (req, res) => {
             });
         });
 };
+
+//usuarios
+exports.comprobar = (req, res) => {
+    const email = req.body.email;
+    const query = `SELECT COUNT(*) FROM USERS WHERE LOWER(EMAIL) = LOWER('${email}')`
+
+    db.sequelize.query(query)
+        .then(data => {
+            res.send(data[0][0]);
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: err.message
+        });
+    });
+}

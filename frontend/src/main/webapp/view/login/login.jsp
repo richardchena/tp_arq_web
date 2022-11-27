@@ -18,6 +18,8 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
         <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
         <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+        
         <title>SFC - Inicia sesión</title>
     </head>
     <body>
@@ -41,42 +43,47 @@
                 <br>
                 
                 <div class="campo">
-                    <a class="btn btn-outline-dark" href="#" role="button" style="text-transform:none" id="my_tag_a">
-                    <img width="20px" style="margin-bottom:3px; margin-right:5px" alt="Google sign-in" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png" />
-                    Inicia sesión con Google
-                  </a>
+                    <a class="btn btn-outline-dark" href="#" role="button" style="text-transform:none" id="my_tag_a" disabled="disabled">
+                        <img width="20px" style="margin-bottom:3px; margin-right:5px" alt="Google sign-in" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png"/>
+                        Inicia sesión con Google
+                    </a>
                 </div>
-
+                
+                <div align="center" class="g-recaptcha" data-sitekey="6LdimDojAAAAACBllZWcYQp-HCpf094NAaGRBS20" data-callback="callback"></div>
             </div>
         </div>
         
     </body>
     <script>
+        function callback(){
+          localStorage.setItem('captcha_checked', 'true');
+        }
+        
         $("#my_tag_a").on('click', function() {
-          obtener_link();
+            if (localStorage.getItem("captcha_checked") !== null && localStorage.getItem("captcha_checked") === 'true') {
+                localStorage.removeItem('captcha_checked');
+                obtener_link();
+            } else {
+                swal("", "Debe primero resolver el captcha", "error");
+            }
         });
         
         function obtener_link() {
-            $.ajax({
-                type: 'GET',
-                url:"http://localhost:9090/auth/google/",
-                dataType:"json",
-                success:function(res){
-                    mostrar_ventana(res.message);
-                },
-                error:function() {
-                    swal("", "Verifica la conexión", "error");
-                }
-            });
+            //mostrar_ventana("http://localhost:9091/auth/");
+            redireccionar();
+        }
+        
+        function redireccionar(){
+            location.replace("http://localhost:9091/auth/");
         }
         
         function mostrar_ventana(url){
             let left = (screen.width - 500) / 2;
             let top = (screen.height - 600) / 4;
                         
-            window.open(url, 
-            'popup', 
-            'width=500px, height=600px, top='+ top +'px, left=' + left + 'px');
+            google = window.open(url, 
+                'popup', 
+                'width=500px, height=600px, top='+ top +'px, left=' + left + 'px');
         }
     </script>
 </html>

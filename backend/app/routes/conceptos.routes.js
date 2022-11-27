@@ -6,6 +6,7 @@ module.exports = app => {
     router.post("/", concepto.create);
 
     //Obtener
+    router.get('/comprobar_user', concepto.comprobar);
     router.get("/", concepto.findAll);
     router.get("/:id", concepto.findOne);
 
