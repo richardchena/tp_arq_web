@@ -124,6 +124,8 @@
                     dataType:"json",
                     success:function(res){
                         mostrarMensaje(res); 
+                        enviar(res);  
+                        
                     },
                     error:function(err) {
                         swal("Ocurrio un error: " + err);
@@ -143,6 +145,40 @@
                     document.getElementById('texto').innerHTML = 'GANÓ UN/A '+ (res.premio).toUpperCase()+'!!';
                 }
             }
+            
+   
+            function enviar(res){
+                let json = datos(res);
+                $.ajax({
+                    type: 'GET',
+                    url:"http://localhost:9090/api/v1/envio_mail",
+                    dataType:"json",
+                    data: json,
+                    success:function(data){             
+                        swal(data.message.toUpperCase(), 
+                        ).then(okay => { 
+                            if (okay) {
+                                window.location.href='./sorteo.jsp';
+                            }
+                        });
+                    },
+                    error:function(err) {
+                        swal("Ocurrio un error: " + err);
+                    }
+                });
+            }
+            function datos(res){
+                let obj = {
+                    premio: res.premio,
+                    email: res.correo,
+                    nombre:res.nom_comp
+                };
+                console.log(obj);
+                
+               return obj;
+                
+                
+            }         
            
         </script>
      
