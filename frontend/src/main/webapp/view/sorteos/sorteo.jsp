@@ -134,7 +134,9 @@
             function mostrarMensaje(res) {
                 $('#sorteo').addClass("sorteo");
                 if(res.nom_comp===""){
+                    document.getElementById('ganadorx').innerHTML = '';
                     document.getElementById('nro_doc').innerHTML = 'NO SE ENCONTRO UN/A GANADOR/A';
+                    document.getElementById('texto').innerHTML = '';
                 }else{
                     document.getElementById('ganadorx').innerHTML = (res.nom_comp).toUpperCase();
                     document.getElementById('nro_doc').innerHTML = 'N° DOCUMENTO: '+(res.cedula).toUpperCase();
