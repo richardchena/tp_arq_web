@@ -105,6 +105,9 @@
                       <label class="label_sorteo" id="ganadorx"></label>
                       <label class="label_sorteo" id="nro_doc"></label>
                       <label class="label_sorteo" id="texto"></label>
+                      <div class="campo">
+                        <button style="visibility: hidden" onclick="location.href='/tp_arq_web/view/sorteos/sorteo.jsp'" id="boton_sorteo" class="btn btn-success text-white" type="button">REALIZAR OTRO SORTEO</button>
+                      </div>
                     </div>
                 </form>   
             </div>
@@ -124,7 +127,7 @@
                     dataType:"json",
                     success:function(res){
                         mostrarMensaje(res); 
-                        enviar(res);  
+                        //enviar(res);  
                         
                     },
                     error:function(err) {
@@ -134,6 +137,7 @@
             }
             
             function mostrarMensaje(res) {
+                document.getElementById('boton_sorteo').style.visibility = "visible";
                 $('#sorteo').addClass("sorteo");
                 if(res.nom_comp===""){
                     document.getElementById('ganadorx').innerHTML = '';
@@ -149,35 +153,30 @@
    
             function enviar(res){
                 let json = datos(res);
+                console.log(json);
                 $.ajax({
-                    type: 'GET',
+                    type: 'get',
                     url:"http://localhost:9090/api/v1/envio_mail",
                     dataType:"json",
                     data: json,
                     success:function(data){             
-                        swal(data.message.toUpperCase(), 
-                        ).then(okay => { 
-                            if (okay) {
-                                window.location.href='./sorteo.jsp';
-                            }
-                        });
+                        swal(data.message.toUpperCase());
                     },
                     error:function(err) {
+                        console.log(err);
                         swal("Ocurrio un error: " + err);
                     }
                 });
             }
+            
             function datos(res){
                 let obj = {
                     premio: res.premio,
                     email: res.correo,
                     nombre:res.nom_comp
                 };
-                console.log(obj);
                 
                return obj;
-                
-                
             }         
            
         </script>

@@ -1,13 +1,20 @@
 const mail = require("../config/mailer");
 
 exports.enviar_mail = (req, res) => {
-    //const id = req.params.id;
+    const email = req.query.email;
+    const premio = req.query.premio;
+    const nombre = req.query.nombre;
+
     mail.transporter.sendMail({
-        from: '"NO-REPLY" tparqweb@gmail.com>',
-        to: "johana.nunhez14@gmail.com", //koujekodoule-9411@yopmail.com
-        subject: "INFO-TAREA",
+        from: '"noreply" tparqweb@gmail.com>',
+        to: email,
+        subject: "¡FELICITACIONES!",
         html: `
-            <b>HOLA MUNDO</b>
+            <b>Estimad@ cliente: ${nombre}</b>
+            <br>
+            <span>Le comentamos que ha sido ganador del '${premio}' del sorteo del día de hoy</span>
+            <br>
+            <span>Muchas felicidades! Saludos,</span>
             <br>
             <p>Este es un mensaje autogenerado, favor no responder</p>
         `,
