@@ -1,0 +1,1 @@
+create type registro_sda as (id_cliente numeric, nombre varchar, doc_nro numeric, correo varchar);

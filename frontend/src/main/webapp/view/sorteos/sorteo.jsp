@@ -127,7 +127,7 @@
                     dataType:"json",
                     success:function(res){
                         mostrarMensaje(res); 
-                        //enviar(res);  
+                        enviar(res);  
                         
                     },
                     error:function(err) {
