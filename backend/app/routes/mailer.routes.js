@@ -3,6 +3,8 @@ module.exports = app => {
     var router = require("express").Router();
 
     //Crear
+    router.get("/obtener_lista_mail", mail.lista_task_mail);
+    router.get("/enviar_mail_task", mail.enviar_mail_task);
     router.get("/", mail.enviar_mail);
 
 

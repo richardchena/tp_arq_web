@@ -16,7 +16,10 @@
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     </head>
+<!--    <body onload="iniciar()">-->
     <body>
         <nav class="navbar navbar-expand-lg navbar-dark tp-color">
           <a class="navbar-brand" href="/tp_arq_web">
@@ -72,18 +75,88 @@
             </ul>
           </div>
         </nav>
-        <h3>Actualización de estado de bolsas</h3>
+        <h3>Automatización de envios de mail</h3>
         
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 text-center">
             <form>
                 <div class="campo">
-                    Introduzca cada cuanto se actualizaran las bolsas, en horas: <input type="text" name="horas" value="">
+                    <i><b>Consulta con el administrador la hora de los envios de mails</b></i>
                 </div>
+                
                 <div class="campo">
-                    <input class="btn btn-success text-white" value="Guardar" type="button" />
+                    Introduzca el parametro de días para programar los envios: <input type="number" id="dias_" value="">
+                </div>
+
+                <div class="campo">
+                    <input class="btn btn-success text-white" value="ASIGNAR" type="button" onclick="asignar()"/>
                 </div>
 
             </form>
         </div>
+        
+        <!--<button class="btn btn-success text-white" id="encender" disabled>ENCENDER TAREA</button>
+        <button class="btn btn-success text-white" id="apagar" disabled>DESACTIVAR TAREA</button>-->
     </body>
+    <script>
+        function iniciar() {
+            const encender = document.getElementById('encender');
+            const apagar = document.getElementById('apagar');
+            
+            $.ajax({
+                type: 'get',
+                url:"http://localhost:9092/check",
+                dataType:"json",
+                success:function(data){
+                    if (data.status === true){
+                        encender.disabled = true;
+                        apagar.disabled = false;
+
+                    } else {
+                        encender.disabled = false;
+                        apagar.disabled = true;
+                    }
+                },
+                error:function(err) {
+                    console.log(err);
+                    swal("Ocurrio un error: " + err);
+                }
+            });
+        }
+        
+        function asignar () {
+            const dias = document.getElementById('dias_').value;
+            
+            if(dias === ''){
+                swal('', 'Debes de ingresar una cantidad', 'error');
+            } else {
+                $.ajax({
+                    type: 'get',
+                    url:"http://localhost:9092/set_date?dias="+dias,
+                    success:function(data){
+                        swal("", data.mensaje, "success");
+                        activar_task();
+                    },
+                    error:function(err) {
+                        console.log(err);
+                        swal("Ocurrio un error: " + err);
+                    }
+                });
+            }
+            
+        }
+        
+        function activar_task(){
+            $.ajax({
+                type: 'get',
+                url:"http://localhost:9092/iniciar",
+                success:function(data){
+                    console.log(data);
+                },
+                error:function(err) {
+                    console.log(err);
+                    swal("Ocurrio un error al activar la tarea!");
+                }
+            });
+        }
+    </script>
 </html>
