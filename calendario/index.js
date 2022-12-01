@@ -37,17 +37,17 @@ function finalisimo (){
     }).then(function (data) {
         if(data.data.length !== 0){
             for (var i = 0; i < data.data.length; i++) {
-                nom_com = data.data[0].nom_com;
-                email = data.data[0].email
-                caducidad_puntaje = data.data[0].caducidad_puntaje
-                saldos_puntos = data.data[0].saldos_puntos
+                nom_com = data.data[i].nom_com;
+                email = data.data[i].email
+                caducidad_puntaje = data.data[i].caducidad_puntaje
+                saldos_puntos = data.data[i].saldos_puntos
 
                 enviar_mail(nom_com, email, caducidad_puntaje, saldos_puntos);
             }
             console.log("COMPLETADO CORRECTAMENTE!");
 
         } else {
-            console.log("NO SE COMPLETADO CORRECTAMENTE!");
+            console.log("NO HAY CORREOS QUE ENVIAR!");
         }
     })
     .catch(function (error) {
@@ -70,16 +70,16 @@ const task0 = calendario
 
 //HORA ESPECIFICA
 const task00 = calendario
-    .schedule('0 43 23 * * *', () => {
+    .schedule('0 53 23 * * *', () => {
         console.log('SON LAS 23:43');
     },{
         scheduled: false,
         timezone: "America/Asuncion"
 });
 
-//tarea
+//tarea este si!!!!!!!
 const task = calendario
-    .schedule('0 31 0 * * *', () => {
+    .schedule('0 15 21 * * *', () => {
         if(dias === null){
             console.log("Debe primeramente asignar un numero para dias");
         }else{

@@ -19,8 +19,7 @@
         <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
         <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     </head>
-<!--    <body onload="iniciar()">-->
-    <body>
+       <body onload="color()">
         <nav class="navbar navbar-expand-lg navbar-dark tp-color">
           <a class="navbar-brand" href="/tp_arq_web">
             <img src="/tp_arq_web/img/logo.png" width="30" height="30" class="d-inline-block tp-color alejar" alt="">
@@ -73,6 +72,8 @@
                 <a class="nav-link text-white" href="/tp_arq_web/view/sorteos/sorteo.jsp">Sorteo</a>
               </li>
             </ul>
+            <div class="texto_calendario">Status sheduler </div>
+            <div id="status" class="circle"></div>
           </div>
         </nav>
         <h3>Automatización de envios de mail</h3>
@@ -88,7 +89,8 @@
                 </div>
 
                 <div class="campo">
-                    <input class="btn btn-success text-white" value="ASIGNAR" type="button" onclick="asignar()"/>
+                    <input class="btn btn-success text-white" value="ASIGNAR DÍAS" type="button" onclick="asignar()"/>
+                    <input class="btn btn-warning text-black" value="DETENER SCHEDULE" type="button" onclick="detener_server()"  id="desactivar_" disabled/>
                 </div>
 
             </form>
@@ -133,8 +135,13 @@
                     type: 'get',
                     url:"http://localhost:9092/set_date?dias="+dias,
                     success:function(data){
-                        swal("", data.mensaje, "success");
                         activar_task();
+                        swal("", data.mensaje, "success")
+                        .then(okay => {
+                            if (okay) {
+                              color();
+                            }
+                        });
                     },
                     error:function(err) {
                         console.log(err);
@@ -155,6 +162,55 @@
                 error:function(err) {
                     console.log(err);
                     swal("Ocurrio un error al activar la tarea!");
+                }
+            });
+        }
+        
+        function color() {
+            $.ajax({
+                type: 'get',
+                url:"http://localhost:9092/check",
+                success:function(data){
+                    if(data.status === false){
+                        document.getElementById("status").style.background = "red";
+                        document.getElementById("desactivar_").disabled = true;
+                    } else {
+                        document.getElementById("status").style.background = "greenyellow";
+                        document.getElementById("desactivar_").disabled = false;
+                        get_date();
+                    }
+                },
+                error:function(err) {
+                    document.getElementById("status").style.background = "red";
+                }
+            });
+        }
+        
+        function get_date() {
+            $.ajax({
+                type: 'get',
+                url:"http://localhost:9092/get_date",
+                success:function(data){
+                    document.getElementById("dias_").value = data.dias;
+                },
+                error:function(err) {
+                    console.log(err);
+                }
+            });
+        }
+        
+        function detener_server(){
+            $.ajax({
+                type: 'get',
+                url:"http://localhost:9092/detener",
+                success:function(data){
+                    swal("", data.mensaje, "success");
+                    document.getElementById("desactivar_").disabled = true;
+                    document.getElementById("dias_").value = "";
+                    document.getElementById("status").style.background = "red";
+                },
+                error:function(err) {
+                    console.log(err);
                 }
             });
         }
